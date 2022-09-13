@@ -24,7 +24,7 @@ class ProductCard extends StatelessWidget {
               height: defaultMargin,
             ),
             Image.asset(
-              'assets/preview_shoes.png',
+              'assets/shoes/preview_shoes.png',
               width: 215,
               height: 150,
               fit: BoxFit.cover,

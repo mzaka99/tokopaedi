@@ -9,7 +9,7 @@ const dummyDataProduct = [
     description:
         'When the adidas Ultraboost debuted back\r\nin 2015, it had an impact that spilled beyond\r\nthe world of running. For this version of t...',
     categoriesId: 1,
-    imageUrl: 'assets/preview_shoes.png',
+    imageUrl: 'assets/shoes/preview_shoes.png',
   ),
   Product(
     id: 2,
@@ -18,7 +18,7 @@ const dummyDataProduct = [
     description:
         'These adidas SL20 Shoes will back your play. \r\nLightweight cushioning gives you a faster \r\npush-off and a snappy feel.',
     categoriesId: 2,
-    imageUrl: 'assets/preview_shoes.png',
+    imageUrl: 'assets/shoes/preview_shoes.png',
   ),
   Product(
     id: 3,
@@ -27,7 +27,7 @@ const dummyDataProduct = [
     description:
         'Wear your values on your feet with these adi\r\ndas running shoes. Rocking the wild colours \r\nshows you\'re not shy about standing out.',
     categoriesId: 3,
-    imageUrl: 'assets/preview_shoes.png',
+    imageUrl: 'assets/shoes/preview_shoes.png',
   ),
 ];
 

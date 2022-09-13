@@ -24,7 +24,7 @@ class CheckoutCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: const DecorationImage(
-                image: AssetImage('assets/preview_shoes.png'),
+                image: AssetImage('assets/shoes/preview_shoes.png'),
                 fit: BoxFit.cover,
               ),
             ),

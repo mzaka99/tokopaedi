@@ -29,7 +29,7 @@ class CartCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   image: const DecorationImage(
                     image: AssetImage(
-                      'assets/preview_shoes.png',
+                      'assets/shoes/preview_shoes.png',
                     ),
                     fit: BoxFit.cover,
                   ),

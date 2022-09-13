@@ -79,7 +79,7 @@ class DetailChatPage extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                'assets/preview_shoes.png',
+                'assets/shoes/preview_shoes.png',
                 width: 54,
               ),
             ),
