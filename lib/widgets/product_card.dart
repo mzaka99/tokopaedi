@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  const ProductCard({
+    Key? key,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.categoryId,
+    required this.imageUrl,
+  }) : super(key: key);
+  final int id;
+  final String name;
+  final double price;
+  final int categoryId;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('/product');
+        Navigator.of(context).pushNamed(
+          '/product',
+          arguments: id,
+        );
       },
       child: Container(
         width: 215,
@@ -24,7 +41,7 @@ class ProductCard extends StatelessWidget {
               height: defaultMargin,
             ),
             Image.asset(
-              'assets/shoes/preview_shoes.png',
+              imageUrl,
               width: 215,
               height: 150,
               fit: BoxFit.cover,
@@ -35,17 +52,19 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hiking',
-                    style: secondaryTextStyle.copyWith(
-                      fontSize: 12,
+                  Consumer<ProductList>(
+                    builder: (context, data, child) => Text(
+                      data.selectCategory(categoryId).name,
+                      style: secondaryTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    'COURT VISION 2.0',
+                    name,
                     maxLines: 1,
                     style: blackTextStyle.copyWith(
                       fontSize: 18,
@@ -57,7 +76,7 @@ class ProductCard extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    '\$58.67',
+                    '\$${price.toString()}',
                     maxLines: 1,
                     style: priceTextStyle.copyWith(
                       fontSize: 14,

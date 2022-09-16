@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/dummy_data.dart';
+import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class ProductPage extends StatefulWidget {
@@ -11,11 +14,11 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final List images = [
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-  ];
+  List images(String url) => [
+        url,
+        url,
+        url,
+      ];
   final List familiarShoes = [
     'assets/shoes/preview_shoes.png',
     'assets/shoes/preview_shoes.png',
@@ -38,7 +41,7 @@ class _ProductPageState extends State<ProductPage> {
       return showDialog(
         context: context,
         builder: (context) {
-          return Container(
+          return SizedBox(
             width: MediaQuery.of(context).size.width - (2 * defaultMargin),
             child: AlertDialog(
               backgroundColor: bgColor3,
@@ -127,7 +130,7 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
-    Widget header() {
+    Widget header(String urlImages) {
       int index = -1;
       return Column(
         children: [
@@ -157,7 +160,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           CarouselSlider(
-            items: images
+            items: images(urlImages)
                 .map((e) => Image.asset(
                       e,
                       width: MediaQuery.of(context).size.width,
@@ -179,7 +182,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: images.map((e) {
+            children: images(urlImages).map((e) {
               index++;
               return indicator(index);
             }).toList(),
@@ -199,12 +202,14 @@ class _ProductPageState extends State<ProductPage> {
           borderRadius: BorderRadius.circular(6),
           image: DecorationImage(
             image: AssetImage(image),
+            fit: BoxFit.cover,
           ),
         ),
       );
     }
 
-    Widget content() {
+    Widget content(Product products) {
+      Product product = products;
       int index = -1;
       return Container(
         width: double.infinity,
@@ -233,7 +238,7 @@ class _ProductPageState extends State<ProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'TERREX URBAN LOW',
+                          product.name,
                           style: primaryTextStyle.copyWith(
                             fontSize: 18,
                             fontWeight: semiBold,
@@ -310,7 +315,7 @@ class _ProductPageState extends State<ProductPage> {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    '\$143.52',
+                    '\$${product.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
@@ -342,7 +347,7 @@ class _ProductPageState extends State<ProductPage> {
                     height: 12,
                   ),
                   Text(
-                    'Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.',
+                    product.description,
                     style: subtitleTextSytle.copyWith(
                       fontWeight: light,
                     ),
@@ -376,15 +381,26 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
                     child: Row(
-                      children: familiarShoes.map((e) {
-                        index++;
-                        return Container(
+                      children: List.generate(
+                        dummyDataProduct.length,
+                        (index) => Container(
                           margin: EdgeInsets.only(
                               left: index == 0 ? defaultMargin : 0),
-                          child: familiarShoesCard(e),
-                        );
-                      }).toList(),
+                          child: familiarShoesCard(
+                            dummyDataProduct[index].imageUrl,
+                          ),
+                        ),
+                      ),
+                      // familiarShoes.map((e) {
+                      //   index++;
+                      //   return Container(
+                      //     margin: EdgeInsets.only(
+                      //         left: index == 0 ? defaultMargin : 0),
+                      //     child: familiarShoesCard(e),
+                      //   );
+                      // }).toList(),
                     ),
                   )
                 ],
@@ -443,12 +459,18 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
+    final productId = ModalRoute.of(context)!.settings.arguments as int;
+    final productData = Provider.of<ProductList>(context, listen: false)
+        .selectProduct(productId);
     return Scaffold(
       backgroundColor: bgColor6,
-      body: ListView(children: [
-        header(),
-        content(),
-      ]),
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          header(productData.imageUrl),
+          content(productData),
+        ],
+      ),
     );
   }
 }

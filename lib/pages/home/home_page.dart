@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/dummy_data.dart';
+import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/product_card.dart';
 import 'package:tokopaedi/widgets/product_tile.dart';
@@ -57,114 +60,52 @@ class HomePage extends StatelessWidget {
 
     Widget categories() {
       return Container(
+        height: 40,
         margin: EdgeInsets.only(top: defaultMargin),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SizedBox(
-                width: defaultMargin,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: primaryColor,
-                ),
-                child: Text(
-                  'All Shoes',
-                  style: primaryTextStyle.copyWith(
-                    fontSize: 13,
-                    fontWeight: medium,
+        child: Consumer<ProductList>(
+          builder: (context, data, _) => ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  data.changesCategory(
+                    index,
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
                   ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
+                  margin: EdgeInsets.only(
+                      left: index == 0 ? defaultMargin : 0, right: 16),
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
-                child: Text(
-                  'Running',
-                  style: subtitleTextSytle.copyWith(
-                    fontSize: 13,
-                    fontWeight: medium,
+                    color: index == data.id ? primaryColor : transparentColor,
+                    border: index == data.id
+                        ? null
+                        : Border.all(
+                            color: subtitleTextColor,
+                          ),
+                  ),
+                  child: Text(
+                    dummyDataCategoryProduct[index].name,
+                    style: index == data.id
+                        ? primaryTextStyle.copyWith(
+                            fontSize: 13,
+                            fontWeight: medium,
+                          )
+                        : subtitleTextSytle.copyWith(
+                            fontSize: 13,
+                            fontWeight: medium,
+                          ),
                   ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
-                child: Text(
-                  'Training',
-                  style: subtitleTextSytle.copyWith(
-                    fontSize: 13,
-                    fontWeight: medium,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
-                child: Text(
-                  'Basketball',
-                  style: subtitleTextSytle.copyWith(
-                    fontSize: 13,
-                    fontWeight: medium,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
-                child: Text(
-                  'Hiking',
-                  style: subtitleTextSytle.copyWith(
-                    fontSize: 13,
-                    fontWeight: medium,
-                  ),
-                ),
-              ),
-            ],
+              );
+            },
+            itemCount: dummyDataCategoryProduct.length,
           ),
         ),
       );
@@ -189,20 +130,49 @@ class HomePage extends StatelessWidget {
 
     Widget popularProduct() {
       return Container(
+        height: 278,
+        width: double.infinity,
         margin: EdgeInsets.only(
           top: 14,
           left: defaultMargin,
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: Row(
-            children: const [
-              ProductCard(),
-              ProductCard(),
-              ProductCard(),
-            ],
-          ),
+        child: Consumer<ProductList>(
+          builder: (context, data, _) =>
+              data.id != 0 && data.getProductBy(data.id).isEmpty
+                  ? Center(
+                      child: Text(
+                        'Do no have a product :) ',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 22,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => ProductCard(
+                        id: data.id == 0
+                            ? dummyDataProduct[index].id
+                            : data.getProductBy(data.id)[index].id,
+                        name: data.id == 0
+                            ? dummyDataProduct[index].name
+                            : data.getProductBy(data.id)[index].name,
+                        price: data.id == 0
+                            ? dummyDataProduct[index].price
+                            : data.getProductBy(data.id)[index].price,
+                        categoryId: data.id == 0
+                            ? dummyDataProduct[index].categoriesId
+                            : data.getProductBy(data.id)[index].categoriesId,
+                        imageUrl: data.id == 0
+                            ? dummyDataProduct[index].imageUrl
+                            : data.getProductBy(data.id)[index].imageUrl,
+                      ),
+                      itemCount: data.id == 0
+                          ? dummyDataProduct.length
+                          : data.getProductBy(data.id).length,
+                    ),
         ),
       );
     }
@@ -225,31 +195,66 @@ class HomePage extends StatelessWidget {
     }
 
     Widget newArrival() {
-      return Container(
-        margin: const EdgeInsets.only(
-          top: 14,
-        ),
-        child: Column(
-          children: const [
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-          ],
-        ),
+      return Consumer<ProductList>(
+        builder: (context, data, _) =>
+            data.id != 5 && data.getProductBy(data.id).isEmpty
+                ? SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: Text(
+                        'Do no have a product :) ',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 22,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ProductTile(
+                        id: data.id == 5
+                            ? dummyDataProduct[index].id
+                            : data.getProductBy(data.id)[index].id,
+                        name: data.id == 5
+                            ? dummyDataProduct[index].name
+                            : data.getProductBy(data.id)[index].name,
+                        price: data.id == 5
+                            ? dummyDataProduct[index].price
+                            : data.getProductBy(data.id)[index].price,
+                        categoryId: data.id == 5
+                            ? dummyDataProduct[index].categoriesId
+                            : data.getProductBy(data.id)[index].categoriesId,
+                        imageUrl: data.id == 5
+                            ? dummyDataProduct[index].imageUrl
+                            : data.getProductBy(data.id)[index].imageUrl,
+                      ),
+                    ),
+                    itemCount: data.id == 5
+                        ? dummyDataProduct.length
+                        : data.getProductBy(data.id).length,
+                  ),
       );
     }
 
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      children: [
-        header(),
-        categories(),
-        popularProductTitle(),
-        popularProduct(),
-        newArrivalTitle(),
-        newArrival(),
-      ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            header(),
+            categories(),
+            popularProductTitle(),
+            popularProduct(),
+            newArrivalTitle(),
+            newArrival(),
+          ],
+        ),
+      ),
     );
   }
 }

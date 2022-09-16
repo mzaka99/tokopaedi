@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tokopaedi/theme.dart';
 
+import '../providers/product_provider.dart';
+
 class ProductTile extends StatelessWidget {
-  const ProductTile({Key? key}) : super(key: key);
+  const ProductTile({
+    Key? key,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.categoryId,
+    required this.imageUrl,
+  }) : super(key: key);
+  final int id;
+  final String name;
+  final double price;
+  final int categoryId;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('/product');
+        Navigator.of(context).pushNamed(
+          '/product',
+          arguments: id,
+        );
       },
       child: Container(
         margin: EdgeInsets.only(
@@ -21,7 +39,7 @@ class ProductTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'assets/shoes/preview_shoes.png',
+                imageUrl,
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
@@ -34,15 +52,17 @@ class ProductTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Football',
-                    style: secondaryTextStyle.copyWith(
-                      fontSize: 12,
+                  Consumer<ProductList>(
+                    builder: (context, data, child) => Text(
+                      data.selectCategory(categoryId).name,
+                      style: secondaryTextStyle.copyWith(
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Predator 20.3 FirmGround',
+                    name,
                     maxLines: 2,
                     style: primaryTextStyle.copyWith(
                       fontSize: 16,
@@ -52,7 +72,7 @@ class ProductTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '\$60.47',
+                    '\$${price.toString()}',
                     style: priceTextStyle.copyWith(
                       fontWeight: medium,
                     ),
