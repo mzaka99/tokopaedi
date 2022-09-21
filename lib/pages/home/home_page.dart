@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
       return Container(
         height: 40,
         margin: EdgeInsets.only(top: defaultMargin),
-        child: Consumer<ProductList>(
+        child: Consumer<ProductProvider>(
           builder: (context, data, _) => ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -136,7 +136,7 @@ class HomePage extends StatelessWidget {
           top: 14,
           left: defaultMargin,
         ),
-        child: Consumer<ProductList>(
+        child: Consumer<ProductProvider>(
           builder: (context, data, _) =>
               data.id != 0 && data.getProductBy(data.id).isEmpty
                   ? Center(
@@ -195,9 +195,9 @@ class HomePage extends StatelessWidget {
     }
 
     Widget newArrival() {
-      return Consumer<ProductList>(
+      return Consumer<ProductProvider>(
         builder: (context, data, _) =>
-            data.id != 5 && data.getProductBy(data.id).isEmpty
+            data.id != 0 && data.getProductBy(data.id).isEmpty
                 ? SizedBox(
                     height: 100,
                     child: Center(
@@ -216,24 +216,12 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ProductTile(
-                        id: data.id == 5
-                            ? dummyDataProduct[index].id
-                            : data.getProductBy(data.id)[index].id,
-                        name: data.id == 5
-                            ? dummyDataProduct[index].name
-                            : data.getProductBy(data.id)[index].name,
-                        price: data.id == 5
-                            ? dummyDataProduct[index].price
-                            : data.getProductBy(data.id)[index].price,
-                        categoryId: data.id == 5
-                            ? dummyDataProduct[index].categoriesId
-                            : data.getProductBy(data.id)[index].categoriesId,
-                        imageUrl: data.id == 5
-                            ? dummyDataProduct[index].imageUrl
-                            : data.getProductBy(data.id)[index].imageUrl,
+                        product: data.id == 0
+                            ? dummyDataProduct[index]
+                            : data.getProductBy(data.id)[index],
                       ),
                     ),
-                    itemCount: data.id == 5
+                    itemCount: data.id == 0
                         ? dummyDataProduct.length
                         : data.getProductBy(data.id).length,
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/dummy_data.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
@@ -19,19 +20,6 @@ class _ProductPageState extends State<ProductPage> {
         url,
         url,
       ];
-  final List familiarShoes = [
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-    'assets/shoes/preview_shoes.png',
-  ];
-
-  int currentIndex = 0;
 
   bool isFav = false;
 
@@ -57,7 +45,7 @@ class _ProductPageState extends State<ProductPage> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           color: primaryTextColor,
                         ),
@@ -117,15 +105,19 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     Widget indicator(int index) {
-      return Container(
-        width: currentIndex == index ? 16 : 4,
-        height: 4,
-        margin: const EdgeInsets.symmetric(
-          horizontal: 2,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: currentIndex == index ? primaryColor : const Color(0xffC4C4C4),
+      return Consumer<ProductProvider>(
+        builder: (context, data, _) => Container(
+          width: data.currentIndexImage == index ? 16 : 4,
+          height: 4,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 2,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: data.currentIndexImage == index
+                ? primaryColor
+                : const Color(0xffC4C4C4),
+          ),
         ),
       );
     }
@@ -171,9 +163,8 @@ class _ProductPageState extends State<ProductPage> {
             options: CarouselOptions(
               initialPage: 0,
               onPageChanged: (index, reason) {
-                setState(() {
-                  currentIndex = index;
-                });
+                Provider.of<ProductProvider>(context, listen: false)
+                    .slideCarousel(index);
               },
             ),
           ),
@@ -210,7 +201,6 @@ class _ProductPageState extends State<ProductPage> {
 
     Widget content(Product products) {
       Product product = products;
-      int index = -1;
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(
@@ -253,41 +243,41 @@ class _ProductPageState extends State<ProductPage> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isFav = !isFav;
-                      });
-                      ScaffoldMessenger.of(context).clearSnackBars();
-                      if (isFav) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            duration: Duration(seconds: 1),
-                            backgroundColor: secondaryColor,
-                            content: Text(
-                              'Has been added to the Wishlist',
-                              textAlign: TextAlign.center,
+                  Consumer<FavoriteProvider>(
+                    builder: (context, data, _) => GestureDetector(
+                      onTap: () {
+                        data.addFavoriteProduct(product);
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        if (data.isFavoriteProduct(product.id)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              duration: Duration(milliseconds: 200),
+                              backgroundColor: secondaryColor,
+                              content: Text(
+                                'Has been added to the Wishlist',
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            duration: Duration(seconds: 1),
-                            backgroundColor: alertColor,
-                            content: Text(
-                              'Has been removed from the Wishlist',
-                              textAlign: TextAlign.center,
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              duration: Duration(milliseconds: 200),
+                              backgroundColor: alertColor,
+                              content: Text(
+                                'Has been removed from the Wishlist',
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    },
-                    child: Image.asset(
-                      isFav
-                          ? 'assets/icon/button_fav_blue.png'
-                          : 'assets/icon/fav_button.png',
-                      width: 46,
+                          );
+                        }
+                      },
+                      child: Image.asset(
+                        data.isFavoriteProduct(product.id)
+                            ? 'assets/icon/button_fav_blue.png'
+                            : 'assets/icon/fav_button.png',
+                        width: 46,
+                      ),
                     ),
                   ),
                 ],
@@ -393,14 +383,6 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                       ),
-                      // familiarShoes.map((e) {
-                      //   index++;
-                      //   return Container(
-                      //     margin: EdgeInsets.only(
-                      //         left: index == 0 ? defaultMargin : 0),
-                      //     child: familiarShoesCard(e),
-                      //   );
-                      // }).toList(),
                     ),
                   )
                 ],
@@ -460,7 +442,7 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     final productId = ModalRoute.of(context)!.settings.arguments as int;
-    final productData = Provider.of<ProductList>(context, listen: false)
+    final productData = Provider.of<ProductProvider>(context, listen: false)
         .selectProduct(productId);
     return Scaffold(
       backgroundColor: bgColor6,

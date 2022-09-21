@@ -52,7 +52,7 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Consumer<ProductList>(
+                  Consumer<ProductProvider>(
                     builder: (context, data, child) => Text(
                       data.selectCategory(categoryId).name,
                       style: secondaryTextStyle.copyWith(

@@ -3,8 +3,9 @@ import 'package:tokopaedi/dummy_data.dart';
 import 'package:tokopaedi/models/category_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
 
-class ProductList with ChangeNotifier {
+class ProductProvider with ChangeNotifier {
   int id = 0;
+  int currentIndexImage = 0;
   CategoryProduct selectCategory(int id) {
     return dummyDataCategoryProduct.firstWhere((data) => data.id == id);
   }
@@ -15,6 +16,11 @@ class ProductList with ChangeNotifier {
 
   List<Product> getProductBy(int id) {
     return [...dummyDataProduct.where((data) => data.id == id)];
+  }
+
+  void slideCarousel(int index) {
+    currentIndexImage = index;
+    notifyListeners();
   }
 
   void changesCategory(int categoryId) {
