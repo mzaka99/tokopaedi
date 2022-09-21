@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/widgets/favorite_tile.dart';
 
 import '../../theme.dart';
@@ -25,82 +27,90 @@ class FavoritePage extends StatelessWidget {
     }
 
     Widget emptyFav() {
-      return Expanded(
-          child: Container(
-        color: bgColor3,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/icon/fav_icon.png',
-              color: const Color(0xff38ABBE),
-              width: 74,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              ' You don\'t have dream shoes?',
-              style: primaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
+      return Container(
+          color: bgColor3,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/icon/fav_icon.png',
+                color: const Color(0xff38ABBE),
+                width: 74,
               ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              'Let\'s find your favorite shoes',
-              style: secondaryTextStyle,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 44,
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 10,
-                    ),
-                    backgroundColor: primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        12,
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                ' You don\'t have dream shoes?',
+                style: primaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Let\'s find your favorite shoes',
+                style: secondaryTextStyle,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 44,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed('/home');
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 10,
+                      ),
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          12,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text(
-                    'Explore Store',
-                    style: primaryTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: medium,
-                    ),
-                  )),
-            )
-          ],
-        ),
-      ));
+                    child: Text(
+                      'Explore Store',
+                      style: primaryTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    )),
+              )
+            ],
+          ));
     }
 
     Widget content() {
       return Expanded(
-          child: Container(
-        color: bgColor3,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-          children: [
-            FavoriteTile(),
-            FavoriteTile(),
-            FavoriteTile(),
-          ],
+        child: Container(
+          padding: EdgeInsets.zero,
+          color: bgColor3,
+          child: Consumer<FavoriteProvider>(
+            builder: (context, data, _) => data.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : data.favProductList.isEmpty
+                    ? emptyFav()
+                    : ListView.builder(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: defaultMargin),
+                        itemCount: data.favProductList.length,
+                        itemBuilder: (context, index) => FavoriteTile(
+                          product: data.favProductList[index],
+                        ),
+                      ),
+          ),
         ),
-      ));
+      );
     }
 
     return Column(

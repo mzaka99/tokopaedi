@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tokopaedi/theme.dart';
+
+import '../providers/favorite_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3)).then((_) {
+      Provider.of<FavoriteProvider>(context, listen: false).fetchFavoriteList();
       Navigator.pushNamed(context, '/sign-in');
     });
     super.initState();

@@ -10,6 +10,7 @@ import 'package:tokopaedi/pages/product_page.dart';
 import 'package:tokopaedi/pages/sign_in_page.dart';
 import 'package:tokopaedi/pages/sign_up_page.dart';
 import 'package:tokopaedi/pages/splash_page.dart';
+import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 
 void main() async {
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ProductList()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => FavoriteProvider()),
       ],
       child: GestureDetector(
         onTap: () {
