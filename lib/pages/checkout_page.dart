@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/checkout_card.dart';
 
@@ -139,111 +141,113 @@ class CheckoutPage extends StatelessWidget {
             ),
           ),
           // NOTE: PAYMENT SUMMARY
-          Container(
-            margin: EdgeInsets.only(top: defaultMargin),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: bgColor4,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Paymment Summary',
-                  style: primaryTextStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: medium,
+          Consumer<CartProvider>(
+            builder: (context, data, _) => Container(
+              margin: EdgeInsets.only(top: defaultMargin),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: bgColor4,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Paymment Summary',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: medium,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Product Quantity',
-                      style: secondaryTextStyle.copyWith(
-                        fontSize: 12,
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Product Quantity',
+                        style: secondaryTextStyle.copyWith(
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '2 Items',
-                      style: primaryTextStyle.copyWith(
-                        fontWeight: medium,
+                      Text(
+                        '${data.totalProduct} Items',
+                        style: primaryTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Product Price',
-                      style: secondaryTextStyle.copyWith(
-                        fontSize: 12,
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Product Price',
+                        style: secondaryTextStyle.copyWith(
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '\$576.96',
-                      style: primaryTextStyle.copyWith(
-                        fontWeight: medium,
+                      Text(
+                        '\$${data.totalPrice}',
+                        style: primaryTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Shipping',
-                      style: secondaryTextStyle.copyWith(
-                        fontSize: 12,
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Shipping',
+                        style: secondaryTextStyle.copyWith(
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Free',
-                      style: primaryTextStyle.copyWith(
-                        fontWeight: medium,
+                      Text(
+                        'Free',
+                        style: primaryTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                const Divider(
-                  thickness: 1,
-                  color: Color(0xff2E3141),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total',
-                      style: priceTextStyle.copyWith(
-                        fontWeight: semiBold,
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: Color(0xff2E3141),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total',
+                        style: priceTextStyle.copyWith(
+                          fontWeight: semiBold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '\$575.95',
-                      style: priceTextStyle.copyWith(
-                        fontWeight: semiBold,
+                      Text(
+                        '\$${data.totalPrice}',
+                        style: priceTextStyle.copyWith(
+                          fontWeight: semiBold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -264,10 +268,15 @@ class CheckoutPage extends StatelessWidget {
             ),
             child: TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/checkout-success',
-                  (route) => false,
-                );
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(
+                      '/checkout-success',
+                      (route) => false,
+                    )
+                    .then(
+                      (_) => Provider.of<CartProvider>(context, listen: false)
+                          .clear(),
+                    );
               },
               style: TextButton.styleFrom(
                   backgroundColor: primaryColor,

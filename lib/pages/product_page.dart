@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/dummy_data.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
@@ -85,7 +86,10 @@ class _ProductPageState extends State<ProductPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/cart', (route) => false);
+                        },
                         child: Text(
                           'View My Cart',
                           style: primaryTextStyle.copyWith(
@@ -199,8 +203,8 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
-    Widget content(Product products) {
-      Product product = products;
+    Widget content(ProductModel products) {
+      ProductModel product = products;
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(
@@ -351,9 +355,7 @@ class _ProductPageState extends State<ProductPage> {
 
             Container(
               width: double.infinity,
-              margin: EdgeInsets.only(
-                top: defaultMargin,
-              ),
+              margin: EdgeInsets.only(top: defaultMargin, bottom: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -388,54 +390,59 @@ class _ProductPageState extends State<ProductPage> {
                 ],
               ),
             ),
-            //NOTE: BUTTONS
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.all(defaultMargin),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/chat');
-                    },
-                    child: Container(
-                      width: 54,
-                      height: 54,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/icon/button_chat.png'),
-                        ),
-                      ),
-                    ),
+          ],
+        ),
+      );
+    }
+
+    Widget button(ProductModel product) {
+      return Container(
+        width: double.infinity,
+        color: bgColor1,
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/chat');
+              },
+              child: Container(
+                width: 54,
+                height: 54,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/icon/button_chat.png'),
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 54,
-                      child: TextButton(
-                        onPressed: () {
-                          showSuccesDialog();
-                        },
-                        style: TextButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            )),
-                        child: Text(
-                          'Add to Cart',
-                          style: primaryTextStyle.copyWith(
-                            fontSize: 16,
-                            fontWeight: semiBold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 54,
+                child: TextButton(
+                  onPressed: () {
+                    Provider.of<CartProvider>(context, listen: false)
+                        .addCartItem(product);
+                    showSuccesDialog();
+                  },
+                  style: TextButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )),
+                  child: Text(
+                    'Add to Cart',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       );
@@ -446,11 +453,17 @@ class _ProductPageState extends State<ProductPage> {
         .selectProduct(productId);
     return Scaffold(
       backgroundColor: bgColor6,
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
+      body: Column(
         children: [
-          header(productData.imageUrl),
-          content(productData),
+          Expanded(
+            child: ListView(
+              children: [
+                header(productData.imageUrl),
+                content(productData),
+              ],
+            ),
+          ),
+          button(productData),
         ],
       ),
     );

@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/models/cart_model.dart';
+import 'package:tokopaedi/providers/cart_provider.dart';
+import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class CartCard extends StatelessWidget {
-  const CartCard({Key? key}) : super(key: key);
+  const CartCard({
+    Key? key,
+    required this.cart,
+    required this.productId,
+  }) : super(key: key);
+  final int productId;
+  final CartModel cart;
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<ProductProvider>(context, listen: false)
+        .selectProduct(productId);
     return Container(
       margin: EdgeInsets.only(
         top: defaultMargin,
@@ -27,9 +39,9 @@ class CartCard extends StatelessWidget {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                     image: AssetImage(
-                      'assets/shoes/preview_shoes.png',
+                      cart.imageUrl,
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -43,13 +55,13 @@ class CartCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'TERREX URBAN LOW',
+                      cart.nameProduct,
                       style: primaryTextStyle.copyWith(
                         fontWeight: semiBold,
                       ),
                     ),
                     Text(
-                      '\$143.98',
+                      '\$${cart.price}',
                       style: priceTextStyle,
                     ),
                   ],
@@ -57,15 +69,21 @@ class CartCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Image.asset(
-                    'assets/icon/button_add.png',
-                    width: 16,
+                  InkWell(
+                    onTap: () {
+                      Provider.of<CartProvider>(context, listen: false)
+                          .addCartItem(product);
+                    },
+                    child: Image.asset(
+                      'assets/icon/button_add.png',
+                      width: 16,
+                    ),
                   ),
                   const SizedBox(
                     height: 2,
                   ),
                   Text(
-                    '2',
+                    cart.quantity.toString(),
                     style: primaryTextStyle.copyWith(
                       fontWeight: medium,
                     ),
@@ -73,33 +91,45 @@ class CartCard extends StatelessWidget {
                   const SizedBox(
                     height: 2,
                   ),
-                  Image.asset(
-                    'assets/icon/button_min.png',
-                    width: 16,
+                  InkWell(
+                    onTap: () {
+                      Provider.of<CartProvider>(context, listen: false)
+                          .removeSingleItem(productId);
+                    },
+                    child: Image.asset(
+                      'assets/icon/button_min.png',
+                      width: 16,
+                    ),
                   ),
                 ],
               )
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Image.asset(
-                'assets/icon/trash_icon.png',
-                width: 10,
-                height: 12,
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Text(
-                'Remove',
-                style: alertTextStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: light,
+          InkWell(
+            onTap: () {
+              Provider.of<CartProvider>(context, listen: false)
+                  .removeItem(productId);
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/icon/trash_icon.png',
+                  width: 10,
+                  height: 12,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  'Remove',
+                  style: alertTextStyle.copyWith(
+                    fontSize: 12,
+                    fontWeight: light,
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

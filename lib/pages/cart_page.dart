@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/widgets/cart_cart.dart';
 
 import '../theme.dart';
@@ -14,7 +16,10 @@ class CartPage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/home',
+                (route) => false,
+              );
             },
             icon: const Icon(
               Icons.chevron_left_rounded,
@@ -95,18 +100,7 @@ class CartPage extends StatelessWidget {
       );
     }
 
-    Widget content() {
-      return ListView(
-        padding: EdgeInsets.symmetric(
-          horizontal: defaultMargin,
-        ),
-        children: const [
-          CartCard(),
-        ],
-      );
-    }
-
-    Widget customButtonNav() {
+    Widget customButtonNav(double totalPrice) {
       return SizedBox(
         height: 180,
         child: Column(
@@ -121,7 +115,7 @@ class CartPage extends StatelessWidget {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    '\$287,96',
+                    '\$${totalPrice.toString()}',
                     style: priceTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 16,
@@ -183,8 +177,27 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: bgColor3,
       appBar: header(),
-      body: content(),
-      bottomNavigationBar: customButtonNav(),
+      body: Consumer<CartProvider>(
+        builder: (context, data, _) => data.cartItem.isEmpty
+            ? emptyCart()
+            : Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: defaultMargin,
+                      ),
+                      itemCount: data.cartItem.length,
+                      itemBuilder: (context, index) => CartCard(
+                        productId: data.cartItem.keys.toList()[index],
+                        cart: data.cartItem.values.toList()[index],
+                      ),
+                    ),
+                  ),
+                  customButtonNav(data.totalPrice),
+                ],
+              ),
+      ),
     );
   }
 }
