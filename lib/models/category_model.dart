@@ -1,8 +1,8 @@
-class CategoryProduct {
+class CategoryProductModel {
   final int id;
   final String name;
 
-  const CategoryProduct({
+  const CategoryProductModel({
     required this.id,
     required this.name,
   });

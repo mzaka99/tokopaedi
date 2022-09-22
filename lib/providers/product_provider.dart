@@ -6,15 +6,15 @@ import 'package:tokopaedi/models/product_model.dart';
 class ProductProvider with ChangeNotifier {
   int id = 0;
   int currentIndexImage = 0;
-  CategoryProduct selectCategory(int id) {
+  CategoryProductModel selectCategory(int id) {
     return dummyDataCategoryProduct.firstWhere((data) => data.id == id);
   }
 
-  Product selectProduct(int id) {
+  ProductModel selectProduct(int id) {
     return dummyDataProduct.firstWhere((data) => data.id == id);
   }
 
-  List<Product> getProductBy(int id) {
+  List<ProductModel> getProductBy(int id) {
     return [...dummyDataProduct.where((data) => data.id == id)];
   }
 
@@ -26,6 +26,5 @@ class ProductProvider with ChangeNotifier {
   void changesCategory(int categoryId) {
     id = categoryId;
     notifyListeners();
-    print(id);
   }
 }

@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.categoryId,
-    required this.imageUrl,
+    required this.product,
   }) : super(key: key);
-  final int id;
-  final String name;
-  final double price;
-  final int categoryId;
-  final String imageUrl;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +17,7 @@ class ProductCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           '/product',
-          arguments: id,
+          arguments: product.id,
         );
       },
       child: Container(
@@ -41,7 +34,7 @@ class ProductCard extends StatelessWidget {
               height: defaultMargin,
             ),
             Image.asset(
-              imageUrl,
+              product.imageUrl,
               width: 215,
               height: 150,
               fit: BoxFit.cover,
@@ -54,7 +47,7 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Consumer<ProductProvider>(
                     builder: (context, data, child) => Text(
-                      data.selectCategory(categoryId).name,
+                      data.selectCategory(product.categoriesId).name,
                       style: secondaryTextStyle.copyWith(
                         fontSize: 12,
                       ),
@@ -64,7 +57,7 @@ class ProductCard extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    name,
+                    product.name,
                     maxLines: 1,
                     style: blackTextStyle.copyWith(
                       fontSize: 18,
@@ -76,7 +69,7 @@ class ProductCard extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    '\$${price.toString()}',
+                    '\$${product.price.toString()}',
                     maxLines: 1,
                     style: priceTextStyle.copyWith(
                       fontSize: 14,

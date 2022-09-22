@@ -4,8 +4,8 @@ import 'package:tokopaedi/models/product_model.dart';
 
 class FavoriteProvider with ChangeNotifier {
   bool isLoading = false;
-  List<Product>? _favProductList = [];
-  List<Product> get favProductList => [..._favProductList!];
+  List<ProductModel>? _favProductList = [];
+  List<ProductModel> get favProductList => [..._favProductList!];
 
   Future<void> fetchFavoriteList() async {
     isLoading = true;
@@ -15,7 +15,7 @@ class FavoriteProvider with ChangeNotifier {
     } else {
       _favProductList = dataList
           .map(
-            (data) => Product(
+            (data) => ProductModel(
               id: data['id'],
               name: data['name'],
               price: data['price'],
@@ -30,9 +30,8 @@ class FavoriteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addFavoriteProduct(Product product) async {
+  Future<void> addFavoriteProduct(ProductModel product) async {
     bool statusProduct = isFavoriteProduct(product.id);
-    print(statusProduct);
     if (statusProduct) {
       _favProductList!.removeWhere((data) => data.id == product.id);
       LocalDBHelper.remove('favorite_list', product.id);
@@ -51,7 +50,9 @@ class FavoriteProvider with ChangeNotifier {
   }
 
   bool isFavoriteProduct(int id) {
-    List<Product> isFav = [..._favProductList!.where((data) => data.id == id)];
+    List<ProductModel> isFav = [
+      ..._favProductList!.where((data) => data.id == id)
+    ];
     if (isFav.isEmpty) {
       return false;
     } else {

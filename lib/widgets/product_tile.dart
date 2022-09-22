@@ -10,7 +10,7 @@ class ProductTile extends StatelessWidget {
     Key? key,
     required this.product,
   }) : super(key: key);
-  final Product product;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {

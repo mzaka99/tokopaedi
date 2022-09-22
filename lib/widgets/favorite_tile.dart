@@ -8,7 +8,7 @@ class FavoriteTile extends StatelessWidget {
     required this.product,
   }) : super(key: key);
 
-  final Product product;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {

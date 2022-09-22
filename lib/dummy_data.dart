@@ -2,7 +2,7 @@ import 'package:tokopaedi/models/category_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
 
 const dummyDataProduct = [
-  Product(
+  ProductModel(
     id: 1,
     name: 'Ultra 4D 5 Shoes',
     price: 54.12,
@@ -11,7 +11,7 @@ const dummyDataProduct = [
     categoriesId: 1,
     imageUrl: 'assets/shoes/preview_shoes.png',
   ),
-  Product(
+  ProductModel(
     id: 2,
     name: 'SL 20 Shoes',
     price: 94.12,
@@ -20,7 +20,7 @@ const dummyDataProduct = [
     categoriesId: 2,
     imageUrl: 'assets/shoes/preview_shoes2.png',
   ),
-  Product(
+  ProductModel(
     id: 3,
     name: 'Ultraboots 20 Shoes',
     price: 24.12,
@@ -32,23 +32,23 @@ const dummyDataProduct = [
 ];
 
 const dummyDataCategoryProduct = [
-  CategoryProduct(
+  CategoryProductModel(
     id: 0,
     name: 'All Shoes',
   ),
-  CategoryProduct(
+  CategoryProductModel(
     id: 1,
     name: 'Running',
   ),
-  CategoryProduct(
+  CategoryProductModel(
     id: 2,
     name: 'Training',
   ),
-  CategoryProduct(
+  CategoryProductModel(
     id: 3,
     name: 'BasketBall',
   ),
-  CategoryProduct(
+  CategoryProductModel(
     id: 4,
     name: 'Hiking',
   ),

@@ -1,4 +1,4 @@
-class Product {
+class ProductModel {
   final int id;
   final String name;
   final double price;
@@ -6,7 +6,7 @@ class Product {
   final int categoriesId;
   final String imageUrl;
 
-  const Product({
+  const ProductModel({
     required this.id,
     required this.name,
     required this.price,

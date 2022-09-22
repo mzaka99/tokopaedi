@@ -137,42 +137,19 @@ class HomePage extends StatelessWidget {
           left: defaultMargin,
         ),
         child: Consumer<ProductProvider>(
-          builder: (context, data, _) =>
-              data.id != 0 && data.getProductBy(data.id).isEmpty
-                  ? Center(
-                      child: Text(
-                        'Do no have a product :) ',
-                        style: primaryTextStyle.copyWith(
-                          fontSize: 22,
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => ProductCard(
-                        id: data.id == 0
-                            ? dummyDataProduct[index].id
-                            : data.getProductBy(data.id)[index].id,
-                        name: data.id == 0
-                            ? dummyDataProduct[index].name
-                            : data.getProductBy(data.id)[index].name,
-                        price: data.id == 0
-                            ? dummyDataProduct[index].price
-                            : data.getProductBy(data.id)[index].price,
-                        categoryId: data.id == 0
-                            ? dummyDataProduct[index].categoriesId
-                            : data.getProductBy(data.id)[index].categoriesId,
-                        imageUrl: data.id == 0
-                            ? dummyDataProduct[index].imageUrl
-                            : data.getProductBy(data.id)[index].imageUrl,
-                      ),
-                      itemCount: data.id == 0
-                          ? dummyDataProduct.length
-                          : data.getProductBy(data.id).length,
-                    ),
+          builder: (context, data, _) => ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) => ProductCard(
+              product: data.id == 0
+                  ? dummyDataProduct[index]
+                  : data.getProductBy(data.id)[index],
+            ),
+            itemCount: data.id == 0
+                ? dummyDataProduct.length
+                : data.getProductBy(data.id).length,
+          ),
         ),
       );
     }
@@ -196,35 +173,58 @@ class HomePage extends StatelessWidget {
 
     Widget newArrival() {
       return Consumer<ProductProvider>(
-        builder: (context, data, _) =>
-            data.id != 0 && data.getProductBy(data.id).isEmpty
-                ? SizedBox(
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        'Do no have a product :) ',
-                        style: primaryTextStyle.copyWith(
-                          fontSize: 22,
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                    ),
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: ProductTile(
-                        product: data.id == 0
-                            ? dummyDataProduct[index]
-                            : data.getProductBy(data.id)[index],
-                      ),
-                    ),
-                    itemCount: data.id == 0
-                        ? dummyDataProduct.length
-                        : data.getProductBy(data.id).length,
-                  ),
+        builder: (context, data, _) => ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: ProductTile(
+              product: data.id == 0
+                  ? dummyDataProduct[index]
+                  : data.getProductBy(data.id)[index],
+            ),
+          ),
+          itemCount: data.id == 0
+              ? dummyDataProduct.length
+              : data.getProductBy(data.id).length,
+        ),
+      );
+    }
+
+    Widget emptyCart() {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 100,
+            ),
+            Image.asset(
+              'assets/icon/icon_cart_empty.png',
+              width: 80,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Sorry, the shoes doesn\'t exist',
+              style: primaryTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: medium,
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              'Let\'s find other shoes',
+              style: secondaryTextStyle,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
       );
     }
 
@@ -236,10 +236,20 @@ class HomePage extends StatelessWidget {
           children: [
             header(),
             categories(),
-            popularProductTitle(),
-            popularProduct(),
-            newArrivalTitle(),
-            newArrival(),
+            Consumer<ProductProvider>(
+              builder: (context, data, _) =>
+                  data.id != 0 && data.getProductBy(data.id).isEmpty
+                      ? emptyCart()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            popularProductTitle(),
+                            popularProduct(),
+                            newArrivalTitle(),
+                            newArrival(),
+                          ],
+                        ),
+            ),
           ],
         ),
       ),
