@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "184372157090",
+    "firebase_url": "https://tokopaedi-33fb6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tokopaedi-33fb6",
+    "storage_bucket": "tokopaedi-33fb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184372157090:android:1781142d1ad805ad4715fb",
+        "android_client_info": {
+          "package_name": "com.example.tokopaedi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184372157090-3pfp0oqomiten2svsvsbuu3fsbjkkr7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl73GORfX3zQQGGkCuX8ic4BZvYkdS36k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184372157090-3pfp0oqomiten2svsvsbuu3fsbjkkr7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
