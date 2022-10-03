@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tokopaedi/models/favorite_product_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/theme.dart';
 
@@ -8,7 +9,7 @@ class FavoriteTile extends StatelessWidget {
     required this.product,
   }) : super(key: key);
 
-  final ProductModel product;
+  final FavoriteProductModel product;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class FavoriteTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                product.imageUrl[0].url,
+                product.imageUrl,
                 width: 60,
               ),
             ),
