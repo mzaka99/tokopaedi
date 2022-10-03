@@ -35,8 +35,8 @@ class FavoriteTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                product.imageUrl,
+              child: Image.network(
+                product.imageUrl[0].url,
                 width: 60,
               ),
             ),

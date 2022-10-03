@@ -49,7 +49,7 @@ class FavoriteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool isFavoriteProduct(int id) {
+  bool isFavoriteProduct(String id) {
     List<ProductModel> isFav = [
       ..._favProductList!.where((data) => data.id == id)
     ];

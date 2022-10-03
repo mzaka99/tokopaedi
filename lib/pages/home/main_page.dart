@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tokopaedi/pages/home/chat_page.dart';
 import 'package:tokopaedi/pages/home/favorite_page.dart';
 import 'package:tokopaedi/pages/home/home_page.dart';
 import 'package:tokopaedi/pages/home/profile_page.dart';
+import 'package:tokopaedi/providers/category_product_provider.dart';
+import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class MainPage extends StatefulWidget {
@@ -16,10 +19,20 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<CategoryProductProvider>(context, listen: false)
+        .fetchDataCategoryProduct()
+        .then(
+          (_) => Provider.of<ProductProvider>(context, listen: false)
+              .fetchDataProduct(),
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget cardButton() {
       return FloatingActionButton(
-        
         onPressed: () {
           Navigator.of(context).pushNamed('/cart');
         },

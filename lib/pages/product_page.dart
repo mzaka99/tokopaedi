@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tokopaedi/dummy_data.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/pages/detail_chat_page.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
@@ -126,7 +126,7 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
-    Widget header(String urlImages) {
+    Widget header(List<ImageUrlModel> urlImages) {
       int index = -1;
       return Column(
         children: [
@@ -156,9 +156,9 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           CarouselSlider(
-            items: images(urlImages)
-                .map((e) => Image.asset(
-                      e,
+            items: urlImages
+                .map((data) => Image.network(
+                      data.url,
                       width: MediaQuery.of(context).size.width,
                       height: 310,
                       fit: BoxFit.cover,
@@ -177,7 +177,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: images(urlImages).map((e) {
+            children: urlImages.map((data) {
               index++;
               return indicator(index);
             }).toList(),
@@ -196,7 +196,7 @@ class _ProductPageState extends State<ProductPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           image: DecorationImage(
-            image: AssetImage(image),
+            image: NetworkImage(image),
             fit: BoxFit.cover,
           ),
         ),
@@ -371,22 +371,24 @@ class _ProductPageState extends State<ProductPage> {
                   const SizedBox(
                     height: 12,
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      children: List.generate(
-                        dummyDataProduct.length,
-                        (index) => Container(
-                          margin: EdgeInsets.only(
-                              left: index == 0 ? defaultMargin : 0),
-                          child: familiarShoesCard(
-                            dummyDataProduct[index].imageUrl,
+                  Consumer<ProductProvider>(builder: (context, data, _) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: List.generate(
+                          data.dataProduct.length,
+                          (index) => Container(
+                            margin: EdgeInsets.only(
+                                left: index == 0 ? defaultMargin : 0),
+                            child: familiarShoesCard(
+                              data.dataProduct[index].imageUrl[0].url,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  )
+                    );
+                  })
                 ],
               ),
             ),
@@ -404,7 +406,9 @@ class _ProductPageState extends State<ProductPage> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed('/chat');
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        DetailChatPage(productModel: product)));
               },
               child: Container(
                 width: 54,
@@ -448,7 +452,7 @@ class _ProductPageState extends State<ProductPage> {
       );
     }
 
-    final productId = ModalRoute.of(context)!.settings.arguments as int;
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
     final productData = Provider.of<ProductProvider>(context, listen: false)
         .selectProduct(productId);
     return Scaffold(

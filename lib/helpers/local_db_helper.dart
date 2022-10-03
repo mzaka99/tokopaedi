@@ -8,7 +8,7 @@ class LocalDBHelper {
       path.join(dbPath, 'tokopaedi.db'),
       onCreate: (db, version) async {
         await db.execute(
-          'CREATE TABLE favorite_list (id INTEGER PRIMARY KEY, name TEXT, price REAL, description TEXT, categories_id INTEGER, image_url TEXT)',
+          'CREATE TABLE favorite_list (id TEXT PRIMARY KEY, name TEXT, price REAL, description TEXT, categories_id INTEGER, image_url TEXT)',
         );
       },
       version: 1,
@@ -19,10 +19,9 @@ class LocalDBHelper {
     final db = await LocalDBHelper.database();
     await db.insert(table, data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    
   }
 
-  static Future<void> remove(String table, int id) async {
+  static Future<void> remove(String table, String id) async {
     final db = await LocalDBHelper.database();
     await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }

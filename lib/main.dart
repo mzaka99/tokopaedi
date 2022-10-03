@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tokopaedi/pages/cart_page.dart';
 import 'package:tokopaedi/pages/checkout_page.dart';
 import 'package:tokopaedi/pages/checkout_success_page.dart';
-import 'package:tokopaedi/pages/detail_chat_page.dart';
 import 'package:tokopaedi/pages/edit_profile_page.dart';
 import 'package:tokopaedi/pages/home/main_page.dart';
 import 'package:tokopaedi/pages/product_page.dart';
@@ -11,6 +10,8 @@ import 'package:tokopaedi/pages/sign_in_page.dart';
 import 'package:tokopaedi/pages/sign_up_page.dart';
 import 'package:tokopaedi/pages/splash_page.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
+import 'package:tokopaedi/providers/category_product_provider.dart';
+import 'package:tokopaedi/providers/chat_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 
@@ -26,8 +27,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CategoryProductProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: GestureDetector(
         onTap: () {
@@ -44,7 +47,6 @@ class MyApp extends StatelessWidget {
             '/sign-in': (context) => const SignInPage(),
             '/sign-up': (context) => const SignUpPage(),
             '/home': (context) => const MainPage(),
-            '/chat': (context) => const DetailChatPage(),
             '/edit-profile': (context) => const EditProfilePage(),
             '/product': (context) => const ProductPage(),
             '/cart': (context) => const CartPage(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/models/product_model.dart';
-import 'package:tokopaedi/providers/product_provider.dart';
+import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class ProductCard extends StatelessWidget {
@@ -33,8 +33,8 @@ class ProductCard extends StatelessWidget {
             SizedBox(
               height: defaultMargin,
             ),
-            Image.asset(
-              product.imageUrl,
+            Image.network(
+              product.imageUrl[0].url,
               width: 215,
               height: 150,
               fit: BoxFit.cover,
@@ -45,7 +45,7 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Consumer<ProductProvider>(
+                  Consumer<CategoryProductProvider>(
                     builder: (context, data, child) => Text(
                       data.selectCategory(product.categoriesId).name,
                       style: secondaryTextStyle.copyWith(

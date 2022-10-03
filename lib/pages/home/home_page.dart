@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tokopaedi/dummy_data.dart';
+import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/product_card.dart';
@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
       return Container(
         height: 40,
         margin: EdgeInsets.only(top: defaultMargin),
-        child: Consumer<ProductProvider>(
+        child: Consumer<CategoryProductProvider>(
           builder: (context, data, _) => ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   data.changesCategory(
-                    index,
+                    data.dataCategoryProduct[index].id,
                   );
                 },
                 child: Container(
@@ -83,16 +83,19 @@ class HomePage extends StatelessWidget {
                       left: index == 0 ? defaultMargin : 0, right: 16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: index == data.id ? primaryColor : transparentColor,
-                    border: index == data.id
-                        ? null
-                        : Border.all(
-                            color: subtitleTextColor,
-                          ),
+                    color: data.categoryId == data.dataCategoryProduct[index].id
+                        ? primaryColor
+                        : transparentColor,
+                    border:
+                        data.categoryId == data.dataCategoryProduct[index].id
+                            ? null
+                            : Border.all(
+                                color: subtitleTextColor,
+                              ),
                   ),
                   child: Text(
-                    dummyDataCategoryProduct[index].name,
-                    style: index == data.id
+                    data.dataCategoryProduct[index].name,
+                    style: data.categoryId == data.dataCategoryProduct[index].id
                         ? primaryTextStyle.copyWith(
                             fontSize: 13,
                             fontWeight: medium,
@@ -105,7 +108,7 @@ class HomePage extends StatelessWidget {
                 ),
               );
             },
-            itemCount: dummyDataCategoryProduct.length,
+            itemCount: data.dataCategoryProduct.length,
           ),
         ),
       );
@@ -128,7 +131,7 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget popularProduct() {
+    Widget popularProduct(String categoriesId) {
       return Container(
         height: 278,
         width: double.infinity,
@@ -142,13 +145,13 @@ class HomePage extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) => ProductCard(
-              product: data.id == 0
-                  ? dummyDataProduct[index]
-                  : data.getProductBy(data.id)[index],
+              product: categoriesId == 'cp0'
+                  ? data.dataProduct[index]
+                  : data.getProductBy(categoriesId)[index],
             ),
-            itemCount: data.id == 0
-                ? dummyDataProduct.length
-                : data.getProductBy(data.id).length,
+            itemCount: categoriesId == 'cp0'
+                ? data.dataProduct.length
+                : data.getProductBy(categoriesId).length,
           ),
         ),
       );
@@ -171,7 +174,7 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget newArrival() {
+    Widget newArrival(String categoriesId) {
       return Consumer<ProductProvider>(
         builder: (context, data, _) => ListView.builder(
           shrinkWrap: true,
@@ -179,14 +182,14 @@ class HomePage extends StatelessWidget {
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: ProductTile(
-              product: data.id == 0
-                  ? dummyDataProduct[index]
-                  : data.getProductBy(data.id)[index],
+              product: categoriesId == 'cp0'
+                  ? data.dataProduct[index]
+                  : data.getProductBy(categoriesId)[index],
             ),
           ),
-          itemCount: data.id == 0
-              ? dummyDataProduct.length
-              : data.getProductBy(data.id).length,
+          itemCount: categoriesId == 'cp0'
+              ? data.dataProduct.length
+              : data.getProductBy(categoriesId).length,
         ),
       );
     }
@@ -229,28 +232,47 @@ class HomePage extends StatelessWidget {
     }
 
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            header(),
-            categories(),
-            Consumer<ProductProvider>(
-              builder: (context, data, _) =>
-                  data.id != 0 && data.getProductBy(data.id).isEmpty
-                      ? emptyCart()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            popularProductTitle(),
-                            popularProduct(),
-                            newArrivalTitle(),
-                            newArrival(),
-                          ],
+      child: RefreshIndicator(
+        onRefresh: () => Provider.of<ProductProvider>(context, listen: false)
+            .fetchDataProduct(),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              header(),
+              Consumer2<CategoryProductProvider, ProductProvider>(
+                builder: (contex, dataCategory, dataProduct, _) => dataProduct
+                        .isLoading
+                    ? const SizedBox(
+                        height: 100,
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
-            ),
-          ],
+                      )
+                    : Column(
+                        children: [
+                          categories(),
+                          dataCategory.categoryId != 'cp0' &&
+                                  Provider.of<ProductProvider>(context,
+                                          listen: false)
+                                      .getProductBy(dataCategory.categoryId)
+                                      .isEmpty
+                              ? emptyCart()
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    popularProductTitle(),
+                                    popularProduct(dataCategory.categoryId),
+                                    newArrivalTitle(),
+                                    newArrival(dataCategory.categoryId),
+                                  ],
+                                ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tokopaedi/pages/detail_chat_page.dart';
 import 'package:tokopaedi/theme.dart';
 
 class ChatTile extends StatelessWidget {
@@ -8,7 +9,11 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('/chat');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>  DetailChatPage(productModel: null),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(top: 33),

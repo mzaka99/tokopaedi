@@ -1,21 +1,23 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tokopaedi/dummy_data.dart';
-import 'package:tokopaedi/models/category_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/services/api_services.dart';
 
 class ProductProvider with ChangeNotifier {
-  int id = 0;
+  String categoriesId = 'cp0';
   int currentIndexImage = 0;
-  CategoryProductModel selectCategory(int id) {
-    return dummyDataCategoryProduct.firstWhere((data) => data.id == id);
+  bool isLoading = true;
+
+  List<ProductModel> _dataProduct = [];
+  List<ProductModel> get dataProduct {
+    return [..._dataProduct];
   }
 
-  ProductModel selectProduct(int id) {
-    return dummyDataProduct.firstWhere((data) => data.id == id);
+  ProductModel selectProduct(String id) {
+    return dataProduct.firstWhere((data) => data.id == id);
   }
 
-  List<ProductModel> getProductBy(int id) {
-    return [...dummyDataProduct.where((data) => data.id == id)];
+  List<ProductModel> getProductBy(String id) {
+    return [...dataProduct.where((data) => data.categoriesId == id)];
   }
 
   void slideCarousel(int index) {
@@ -23,8 +25,36 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void changesCategory(int categoryId) {
-    id = categoryId;
+  void changesCategory(String categoryId) {
+    categoryId = categoryId;
     notifyListeners();
+  }
+
+  Future<void> fetchDataProduct() async {
+    isLoading = true;
+    try {
+      final getData = await APIServices().getData(path: '/products.json')
+          as Map<String, dynamic>;
+      final List<ProductModel> loadedData = [];
+      getData.forEach((prodId, prodData) {
+        loadedData.add(
+          ProductModel(
+            id: prodId,
+            name: prodData['name'],
+            price: double.parse(prodData['price']),
+            description: prodData['description'],
+            categoriesId: prodData['categoryId'],
+            imageUrl: (prodData['image'] as List<dynamic>)
+                .map((url) => ImageUrlModel(url: url['url']))
+                .toList(),
+          ),
+        );
+      });
+      isLoading = false;
+      _dataProduct = loadedData;
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

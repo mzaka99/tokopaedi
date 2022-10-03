@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/theme.dart';
-
-import '../providers/product_provider.dart';
 
 class ProductTile extends StatelessWidget {
   const ProductTile({
@@ -31,8 +30,8 @@ class ProductTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                product.imageUrl,
+              child: Image.network(
+                product.imageUrl[0].url,
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
@@ -45,7 +44,7 @@ class ProductTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Consumer<ProductProvider>(
+                  Consumer<CategoryProductProvider>(
                     builder: (context, data, child) => Text(
                       data.selectCategory(product.categoriesId).name,
                       style: secondaryTextStyle.copyWith(

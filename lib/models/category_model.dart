@@ -1,5 +1,5 @@
 class CategoryProductModel {
-  final int id;
+  final String id;
   final String name;
 
   const CategoryProductModel({

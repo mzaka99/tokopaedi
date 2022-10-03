@@ -11,7 +11,7 @@ class CartCard extends StatelessWidget {
     required this.cart,
     required this.productId,
   }) : super(key: key);
-  final int productId;
+  final String productId;
   final CartModel cart;
 
   @override
@@ -40,7 +40,7 @@ class CartCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: AssetImage(
+                    image: NetworkImage(
                       cart.imageUrl,
                     ),
                     fit: BoxFit.cover,

@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/chat_bubble.dart';
 
-class DetailChatPage extends StatelessWidget {
-  const DetailChatPage({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class DetailChatPage extends StatefulWidget {
+  ProductModel? productModel;
+  DetailChatPage({
+    required this.productModel,
+    Key? key,
+  }) : super(key: key);
 
+  @override
+  State<DetailChatPage> createState() => _DetailChatPageState();
+}
+
+class _DetailChatPageState extends State<DetailChatPage> {
   @override
   Widget build(BuildContext context) {
     AppBar detailChatAppBar() {
@@ -78,8 +89,8 @@ class DetailChatPage extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/shoes/preview_shoes.png',
+              child: Image.network(
+                widget.productModel!.imageUrl[0].url,
                 width: 54,
               ),
             ),
@@ -92,14 +103,14 @@ class DetailChatPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'COURT VISIO 2.0 2022',
+                    widget.productModel!.name,
                     style: primaryTextStyle.copyWith(
                       overflow: TextOverflow.ellipsis,
                     ),
                     maxLines: 1,
                   ),
                   Text(
-                    '\$57,15',
+                    '\$${widget.productModel!.price}',
                     style: priceTextStyle.copyWith(
                       fontWeight: medium,
                     ),
@@ -107,9 +118,16 @@ class DetailChatPage extends StatelessWidget {
                 ],
               ),
             ),
-            Image.asset(
-              'assets/icon/close_button.png',
-              width: 22,
+            InkWell(
+              onTap: () {
+                setState(() {
+                  widget.productModel = null;
+                });
+              },
+              child: Image.asset(
+                'assets/icon/close_button.png',
+                width: 22,
+              ),
             ),
           ],
         ),
@@ -123,7 +141,7 @@ class DetailChatPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            productReview(),
+            widget.productModel == null ? const SizedBox() : productReview(),
             Row(
               children: [
                 Expanded(

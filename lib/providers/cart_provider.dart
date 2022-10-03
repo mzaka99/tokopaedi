@@ -3,8 +3,8 @@ import 'package:tokopaedi/models/cart_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
 
 class CartProvider with ChangeNotifier {
-  late final Map<int, CartModel> _cartItem = {};
-  Map<int, CartModel> get cartItem {
+  late final Map<String, CartModel> _cartItem = {};
+  Map<String, CartModel> get cartItem {
     return {..._cartItem};
   }
 
@@ -44,7 +44,7 @@ class CartProvider with ChangeNotifier {
           nameProduct: product.name,
           quantity: 1,
           price: product.price,
-          imageUrl: product.imageUrl,
+          imageUrl: product.imageUrl[0].url,
         ),
       );
     }
@@ -52,7 +52,7 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeSingleItem(int productId) {
+  void removeSingleItem(String productId) {
     if (!_cartItem.containsKey(productId)) {
       return;
     }
@@ -73,7 +73,7 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(int productId) {
+  void removeItem(String productId) {
     _cartItem.remove(productId);
     notifyListeners();
   }
