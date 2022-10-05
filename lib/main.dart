@@ -7,9 +7,9 @@ import 'package:tokopaedi/pages/checkout_success_page.dart';
 import 'package:tokopaedi/pages/edit_profile_page.dart';
 import 'package:tokopaedi/pages/home/main_page.dart';
 import 'package:tokopaedi/pages/product_page.dart';
-import 'package:tokopaedi/pages/sign_in_page.dart';
-import 'package:tokopaedi/pages/sign_up_page.dart';
+import 'package:tokopaedi/pages/auth_page.dart';
 import 'package:tokopaedi/pages/splash_page.dart';
+import 'package:tokopaedi/providers/authenticate_provider.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/chat_provider.dart';
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => AuthenticateProvider()),
       ],
       child: GestureDetector(
         onTap: () {
@@ -46,8 +47,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routes: {
             '/': (context) => const SplashPage(),
-            '/sign-in': (context) => const SignInPage(),
-            '/sign-up': (context) => const SignUpPage(),
+            '/auth': (context) => const SignInPage(),
             '/home': (context) => const MainPage(),
             '/edit-profile': (context) => const EditProfilePage(),
             '/product': (context) => const ProductPage(),

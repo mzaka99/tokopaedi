@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/authenticate_provider.dart';
 
 import '../../theme.dart';
+import '../../widgets/widget_custom.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -45,14 +48,33 @@ class ProfilePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/sign-in', (route) => false);
-                  },
-                  child: Image.asset(
-                    'assets/icon/logout_button.png',
-                    width: 20,
+                Ink(
+                  height: 50,
+                  width: 50,
+                  padding: const EdgeInsets.all(13),
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => authAlertDialog(
+                            context: context,
+                            titleText: 'Logout',
+                            message: 'Are you sure ?',
+                            multipleButton: true,
+                            onpress: () async {
+                              Provider.of<AuthenticateProvider>(context,
+                                      listen: false)
+                                  .logOut();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/auth', (route) => false,
+                                  arguments: true);
+                            }),
+                      );
+                    },
+                    child: Image.asset(
+                      'assets/icon/logout_button.png',
+                      width: 20,
+                    ),
                   ),
                 ),
               ],
