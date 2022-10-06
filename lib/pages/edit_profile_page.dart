@@ -29,7 +29,10 @@ class EditProfilePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<UserProvider>(context, listen: false)
+                    .updateDataUser(context);
+              },
               icon: const Icon(
                 Icons.check,
                 color: primaryColor,

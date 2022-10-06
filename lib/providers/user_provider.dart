@@ -3,13 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_model.dart';
+import '../widgets/widget_custom.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? dataUser;
+  bool isLoading = false;
+  bool isSucces = false;
   final formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final mAuth = FirebaseAuth.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   Future<dynamic> getData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -32,5 +38,48 @@ class UserProvider with ChangeNotifier {
     userNameController.text = dataUser!.userName;
     emailController.text = dataUser!.email;
     notifyListeners();
+  }
+
+  Future<void> updateDataUser(BuildContext context) async {
+    final curentUser = FirebaseAuth.instance.currentUser!;
+    passwordController.clear();
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return changeEmailDialog(
+          context: context,
+          controller: passwordController,
+          onpress: isSucces
+              ? () {
+                  Navigator.of(context).pop();
+                  isLoading = false;
+                  isSucces = false;
+                  notifyListeners();
+                }
+              : () async {
+                  isLoading = true;
+                  notifyListeners();
+                  final credential = EmailAuthProvider.credential(
+                      email: curentUser.email!,
+                      password: passwordController.text.trim());
+                  curentUser.reauthenticateWithCredential(credential).then(
+                        (value) => value.user
+                            ?.updateEmail(emailController.text.trim()),
+                      );
+                  await users.doc(curentUser.uid).update({
+                    'full_name': fullNameController.text.trim(),
+                    'username': userNameController.text.trim(),
+                    'email': emailController.text.trim(),
+                  }).then((_) {
+                    getData();
+                    isLoading = false;
+                    isSucces = true;
+                    notifyListeners();
+                  });
+                },
+        );
+      },
+    );
   }
 }
