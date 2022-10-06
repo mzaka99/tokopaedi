@@ -15,6 +15,7 @@ import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/chat_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
         ChangeNotifierProvider(create: (context) => AuthenticateProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: GestureDetector(
         onTap: () {
