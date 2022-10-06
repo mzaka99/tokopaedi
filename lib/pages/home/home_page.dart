@@ -43,18 +43,12 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                width: 54,
-                height: 54,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: secondaryColor,
-                    image: DecorationImage(
-                      image: AssetImage(
-                        'assets/icon/profile_icon.png',
-                      ),
-                    )),
-              )
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: data.urlImageUser != null
+                    ? NetworkImage(data.urlImageUser!) as ImageProvider
+                    : const AssetImage(' assets/icon/profile_icon.png'),
+              ),
             ],
           ),
         ),

@@ -21,11 +21,11 @@ class ProfilePage extends StatelessWidget {
             child: Consumer<UserProvider>(
               builder: (context, data, _) => Row(
                 children: [
-                  ClipOval(
-                    child: Image.asset(
-                      'assets/icon/profile_icon.png',
-                      width: 64,
-                    ),
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundImage: data.urlImageUser != null
+                        ? NetworkImage(data.urlImageUser!) as ImageProvider
+                        : const AssetImage(' assets/icon/profile_icon.png'),
                   ),
                   const SizedBox(
                     width: 16,

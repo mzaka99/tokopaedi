@@ -17,6 +17,8 @@ class EditProfilePage extends StatelessWidget {
         backgroundColor: bgColor1,
         leading: IconButton(
             onPressed: () {
+              Provider.of<UserProvider>(context, listen: false)
+                  .deleteImagePicker();
               Navigator.of(context).pop();
             },
             icon: const Icon(
@@ -51,15 +53,26 @@ class EditProfilePage extends StatelessWidget {
           builder: (context, data, _) => Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                margin: EdgeInsets.only(top: defaultMargin),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('assets/icon/profile_icon.png'),
-                  ),
+              SizedBox(
+                height: defaultMargin,
+              ),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage:
+                    data.urlImageUser != null && data.imageUser == null
+                        ? NetworkImage(data.urlImageUser!)
+                        : data.imageUser != null
+                            ? FileImage(data.imageUser!) as ImageProvider
+                            : const AssetImage('assets/icon/profile_icon.png'),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  data.pickImage();
+                },
+                icon: const Icon(Icons.camera_alt_rounded),
+                label: Text(
+                  'Change Photo',
+                  style: priceTextStyle,
                 ),
               ),
               editProfileInput(
@@ -80,11 +93,15 @@ class EditProfilePage extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: bgColor3,
-      appBar: header(),
-      body: content(),
+    return WillPopScope(
+      onWillPop: () async =>
+          Provider.of<UserProvider>(context, listen: false).deleteImagePicker(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: bgColor3,
+        appBar: header(),
+        body: content(),
+      ),
     );
   }
 }
