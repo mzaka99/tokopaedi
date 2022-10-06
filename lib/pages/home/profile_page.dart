@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/providers/authenticate_provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 
 import '../../theme.dart';
 import '../../widgets/widget_custom.dart';
@@ -17,67 +18,70 @@ class ProfilePage extends StatelessWidget {
         flexibleSpace: SafeArea(
           child: Container(
             padding: EdgeInsets.all(defaultMargin),
-            child: Row(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/icon/profile_icon.png',
-                    width: 64,
-                  ),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hallo, Alex',
-                        style: primaryTextStyle.copyWith(
-                          fontSize: 24,
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                      Text(
-                        '@alexkennn',
-                        style: subtitleTextSytle.copyWith(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Ink(
-                  height: 50,
-                  width: 50,
-                  padding: const EdgeInsets.all(13),
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => authAlertDialog(
-                            context: context,
-                            titleText: 'Logout',
-                            message: 'Are you sure ?',
-                            multipleButton: true,
-                            onpress: () async {
-                              Provider.of<AuthenticateProvider>(context,
-                                      listen: false)
-                                  .logOut();
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/auth', (route) => false,
-                                  arguments: true);
-                            }),
-                      );
-                    },
+            child: Consumer<UserProvider>(
+              builder: (context, data, _) => Row(
+                children: [
+                  ClipOval(
                     child: Image.asset(
-                      'assets/icon/logout_button.png',
-                      width: 20,
+                      'assets/icon/profile_icon.png',
+                      width: 64,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hallo, ${data.dataUser!.fullName}',
+                          style: primaryTextStyle.copyWith(
+                            fontSize: 24,
+                            fontWeight: semiBold,
+                          ),
+                        ),
+                        Text(
+                          '@${data.dataUser!.userName}',
+                          style: subtitleTextSytle.copyWith(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Ink(
+                    height: 50,
+                    width: 50,
+                    padding: const EdgeInsets.all(13),
+                    child: InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => authAlertDialog(
+                              context: context,
+                              icon: Icons.info_outline_rounded,
+                              titleText: 'Logout',
+                              message: 'Are you sure ?',
+                              multipleButton: true,
+                              onpress: () async {
+                                Provider.of<AuthenticateProvider>(context,
+                                        listen: false)
+                                    .logOut();
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/auth', (route) => false,
+                                    arguments: true);
+                              }),
+                        );
+                      },
+                      child: Image.asset(
+                        'assets/icon/logout_button.png',
+                        width: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -128,6 +132,8 @@ class ProfilePage extends StatelessWidget {
               ),
               InkWell(
                   onTap: () {
+                    Provider.of<UserProvider>(context, listen: false)
+                        .fetchDataToController();
                     Navigator.of(context).pushNamed('/edit-profile');
                   },
                   child: menuItem('Edit Profile')),

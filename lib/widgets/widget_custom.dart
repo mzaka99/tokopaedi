@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -46,13 +45,50 @@ Widget customInput({
   );
 }
 
+Widget editProfileInput({
+  required String title,
+  required TextEditingController controller,
+  String? Function(String?)? validator,
+  String? hintText,
+}) {
+  return Container(
+    margin: EdgeInsets.only(
+      top: defaultMargin,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: secondaryTextStyle.copyWith(
+            fontSize: 13,
+          ),
+        ),
+        TextFormField(
+          style: primaryTextStyle,
+          controller: controller,
+          validator: validator,
+          decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: primaryTextStyle,
+              enabledBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: subtitleTextColor,
+                ),
+              )),
+        )
+      ],
+    ),
+  );
+}
+
 InputDecoration inputDecor({
   required String hintText,
   required String assetIcon,
 }) {
   return InputDecoration(
     hintText: hintText,
-    contentPadding: EdgeInsets.only(left: 10, top: 13, bottom: 13),
+    contentPadding: const EdgeInsets.only(left: 10, top: 13, bottom: 13),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide.none,
@@ -88,6 +124,7 @@ InputDecoration inputDecor({
 Widget authAlertDialog({
   required BuildContext context,
   required String message,
+  required IconData icon,
   bool multipleButton = false,
   String titleText = 'Attention',
   VoidCallback? onpress,
@@ -113,6 +150,11 @@ Widget authAlertDialog({
                   color: primaryTextColor,
                 ),
               ),
+            ),
+            Icon(
+              icon,
+              color: const Color(0xff38ABBE),
+              size: 100,
             ),
             const SizedBox(
               height: 12,

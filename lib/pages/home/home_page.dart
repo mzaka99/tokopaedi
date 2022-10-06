@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/product_card.dart';
 import 'package:tokopaedi/widgets/product_tile.dart';
@@ -15,45 +16,47 @@ class HomePage extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(
             top: defaultMargin, left: defaultMargin, right: defaultMargin),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hallo, Alex',
-                    maxLines: 1,
-                    style: primaryTextStyle.copyWith(
-                      fontSize: 24,
-                      overflow: TextOverflow.ellipsis,
-                      fontWeight: semiBold,
+        child: Consumer<UserProvider>(
+          builder: (context, data, _) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Hallo, ${data.dataUser!.fullName}",
+                      maxLines: 1,
+                      style: primaryTextStyle.copyWith(
+                        fontSize: 24,
+                        overflow: TextOverflow.ellipsis,
+                        fontWeight: semiBold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '@alexkeinn',
-                    style: subtitleTextSytle.copyWith(
-                      fontSize: 16,
-                      fontWeight: regular,
+                    Text(
+                      '@${data.dataUser!.userName}',
+                      style: subtitleTextSytle.copyWith(
+                        fontSize: 16,
+                        fontWeight: regular,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Container(
-              width: 54,
-              height: 54,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: secondaryColor,
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/icon/profile_icon.png',
-                    ),
-                  )),
-            )
-          ],
+              Container(
+                width: 54,
+                height: 54,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: secondaryColor,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/icon/profile_icon.png',
+                      ),
+                    )),
+              )
+            ],
+          ),
         ),
       );
     }
@@ -240,7 +243,6 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              header(),
               Consumer2<CategoryProductProvider, ProductProvider>(
                 builder: (contex, dataCategory, dataProduct, _) => dataProduct
                         .isLoading
@@ -252,6 +254,7 @@ class HomePage extends StatelessWidget {
                       )
                     : Column(
                         children: [
+                          header(),
                           categories(),
                           dataCategory.categoryId != 'cp0' &&
                                   Provider.of<ProductProvider>(context,

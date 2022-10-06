@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tokopaedi/models/favorite_product_model.dart';
-import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/theme.dart';
 
 class FavoriteTile extends StatelessWidget {

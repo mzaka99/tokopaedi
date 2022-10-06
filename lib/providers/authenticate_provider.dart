@@ -13,8 +13,10 @@ class AuthenticateProvider with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final mAuth = FirebaseAuth.instance;
+
   void changeMode() {
     isLogin = !isLogin;
+    clearController();
     notifyListeners();
   }
 
@@ -54,6 +56,7 @@ class AuthenticateProvider with ChangeNotifier {
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
+        clearController();
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
@@ -80,6 +83,7 @@ class AuthenticateProvider with ChangeNotifier {
           builder: (context) {
             return authAlertDialog(
               context: context,
+              icon: Icons.error_outline_rounded,
               message: message,
             );
           },

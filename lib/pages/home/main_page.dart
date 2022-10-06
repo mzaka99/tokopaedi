@@ -6,6 +6,7 @@ import 'package:tokopaedi/pages/home/home_page.dart';
 import 'package:tokopaedi/pages/home/profile_page.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,6 +22,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<UserProvider>(context, listen: false).getData();
     Provider.of<CategoryProductProvider>(context, listen: false)
         .fetchDataCategoryProduct()
         .then(

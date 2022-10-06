@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
+import 'package:tokopaedi/widgets/widget_custom.dart';
 
 import '../theme.dart';
 
@@ -35,120 +38,41 @@ class EditProfilePage extends StatelessWidget {
       );
     }
 
-    Widget nameInput() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: defaultMargin,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 13,
-              ),
-            ),
-            TextFormField(
-              style: primaryTextStyle,
-              decoration: InputDecoration(
-                  hintText: 'Alex Keinzal',
-                  hintStyle: primaryTextStyle,
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: subtitleTextColor,
-                    ),
-                  )),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget usernameInput() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: defaultMargin,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Username',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 13,
-              ),
-            ),
-            TextFormField(
-              style: primaryTextStyle,
-              decoration: InputDecoration(
-                  hintText: '@alexkeinn',
-                  hintStyle: primaryTextStyle,
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: subtitleTextColor,
-                    ),
-                  )),
-            )
-          ],
-        ),
-      );
-    }
-
-    Widget emailInput() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: defaultMargin,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Email Address',
-              style: secondaryTextStyle.copyWith(
-                fontSize: 13,
-              ),
-            ),
-            TextFormField(
-              style: primaryTextStyle,
-              decoration: InputDecoration(
-                  hintText: 'alex.kein@mail.com',
-                  hintStyle: primaryTextStyle,
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: subtitleTextColor,
-                    ),
-                  )),
-            )
-          ],
-        ),
-      );
-    }
-
     Widget content() {
       return Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(
           horizontal: defaultMargin,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              margin: EdgeInsets.only(top: defaultMargin),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage('assets/icon/profile_icon.png'),
+        child: Consumer<UserProvider>(
+          builder: (context, data, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                margin: EdgeInsets.only(top: defaultMargin),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage('assets/icon/profile_icon.png'),
+                  ),
                 ),
               ),
-            ),
-            nameInput(),
-            usernameInput(),
-            emailInput(),
-          ],
+              editProfileInput(
+                title: 'Name',
+                controller: data.fullNameController,
+              ),
+              editProfileInput(
+                title: 'Username',
+                controller: data.userNameController,
+              ),
+              editProfileInput(
+                title: 'Email Address',
+                controller: data.emailController,
+              ),
+            ],
+          ),
         ),
       );
     }
