@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 
 import '../widgets/widget_custom.dart';
 
@@ -44,19 +45,11 @@ class AuthenticateProvider with ChangeNotifier {
         userCredential = await mAuth.signInWithEmailAndPassword(
             email: emailController.text.trim(),
             password: passwordController.text.trim());
-        clearController();
-        if (userCredential.user != null) {
-          Future.delayed(const Duration(seconds: 0)).then((_) {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/home', (route) => false);
-          });
-        }
       } else {
         userCredential = await mAuth.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
-        clearController();
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
@@ -68,8 +61,10 @@ class AuthenticateProvider with ChangeNotifier {
           'image_url': '',
         });
       }
+      clearController();
       if (userCredential.user != null) {
         Future.delayed(const Duration(seconds: 0)).then((_) {
+          UserProvider().getData();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         });

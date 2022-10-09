@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              data.dataUser!.imageUrl == null
+              data.dataUser!.imageUrl == ''
                   ? const CircleAvatar(
                       radius: 30,
                       backgroundImage:
@@ -254,35 +254,37 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Consumer2<CategoryProductProvider, ProductProvider>(
-                builder: (contex, dataCategory, dataProduct, _) => dataProduct
-                        .isLoading
-                    ? const SizedBox(
-                        height: 100,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Column(
-                        children: [
-                          header(),
-                          categories(),
-                          dataCategory.categoryId != 'cp0' &&
-                                  Provider.of<ProductProvider>(context,
-                                          listen: false)
-                                      .getProductBy(dataCategory.categoryId)
-                                      .isEmpty
-                              ? emptyCart()
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    popularProductTitle(),
-                                    popularProduct(dataCategory.categoryId),
-                                    newArrivalTitle(),
-                                    newArrival(dataCategory.categoryId),
-                                  ],
-                                ),
-                        ],
-                      ),
+                builder: (contex, dataCategory, dataProduct, _) =>
+                    dataProduct.isLoading || dataCategory.isLoading
+                        ? SizedBox(
+                            height: MediaQuery.of(context).size.height -
+                                defaultMargin,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              header(),
+                              categories(),
+                              dataCategory.categoryId != 'cp0' &&
+                                      Provider.of<ProductProvider>(context,
+                                              listen: false)
+                                          .getProductBy(dataCategory.categoryId)
+                                          .isEmpty
+                                  ? emptyCart()
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        popularProductTitle(),
+                                        popularProduct(dataCategory.categoryId),
+                                        newArrivalTitle(),
+                                        newArrival(dataCategory.categoryId),
+                                      ],
+                                    ),
+                            ],
+                          ),
               ),
             ],
           ),

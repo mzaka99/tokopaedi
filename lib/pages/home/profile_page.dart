@@ -23,7 +23,7 @@ class ProfilePage extends StatelessWidget {
             child: Consumer<UserProvider>(
               builder: (context, data, _) => Row(
                 children: [
-                  data.dataUser!.imageUrl == null
+                  data.dataUser!.imageUrl == ''
                       ? const CircleAvatar(
                           radius: 30,
                           backgroundImage:
@@ -55,7 +55,9 @@ class ProfilePage extends StatelessWidget {
                           style: primaryTextStyle.copyWith(
                             fontSize: 24,
                             fontWeight: semiBold,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                          maxLines: 2,
                         ),
                         Text(
                           '@${data.dataUser!.userName}',

@@ -101,7 +101,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> updateDataUser(BuildContext context) async {
     final isValid = formKey.currentState!.validate();
-    if (isValid) {
+    if (!isValid) {
       return;
     } else {
       final curentUser = FirebaseAuth.instance.currentUser!;

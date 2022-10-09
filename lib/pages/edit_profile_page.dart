@@ -66,26 +66,31 @@ class EditProfilePage extends StatelessWidget {
                 SizedBox(
                   height: defaultMargin,
                 ),
-                data.urlImageUser == null && data.imageUser != null
+                data.urlImageUser == '' && data.imageUser == null
                     ? const CircleAvatar(
                         radius: 50,
                         backgroundImage:
                             AssetImage('assets/icon/profile_icon.png'),
                       )
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: CachedNetworkImage(
-                          imageUrl: data.dataUser!.imageUrl!,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Shimmer(
-                            child: Container(
-                              color: Colors.grey.shade300,
+                    : data.imageUser != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundImage: FileImage(data.imageUser!),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              imageUrl: data.dataUser!.imageUrl!,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Shimmer(
+                                child: Container(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
                 TextButton.icon(
                   onPressed: () {
                     data.pickImage();
