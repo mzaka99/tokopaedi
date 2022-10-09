@@ -130,7 +130,7 @@ class SignInPage extends StatelessWidget {
                         controller: authData.fullNameController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Harap masukan nama lengkap anda.';
+                            return 'Please enter your full name.';
                           }
                           return null;
                         },
@@ -145,7 +145,7 @@ class SignInPage extends StatelessWidget {
                         controller: authData.userNameController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Harap masukan nama lengkap anda.';
+                            return 'Please enter your username.';
                           }
                           return null;
                         },
@@ -159,7 +159,7 @@ class SignInPage extends StatelessWidget {
                       controller: authData.emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Harap masukan nama lengkap anda.';
+                          return 'Please enter your email address.';
                         }
                         return null;
                       },
@@ -173,7 +173,7 @@ class SignInPage extends StatelessWidget {
                       controller: authData.passwordController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Harap masukan nama lengkap anda.';
+                          return 'Please enter your password.';
                         }
                         return null;
                       },
