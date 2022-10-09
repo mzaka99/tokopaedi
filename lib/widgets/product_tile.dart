@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/theme.dart';
@@ -30,11 +32,13 @@ class ProductTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                product.imageUrl[0].url,
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
+              child: CachedNetworkImage(
+                imageUrl: product.imageUrl[0].url,
+                placeholder: (context, url) => Shimmer(
+                  child: Container(
+                    color: Colors.grey.shade300,
+                  ),
+                ),
               ),
             ),
             const SizedBox(

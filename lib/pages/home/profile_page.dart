@@ -127,52 +127,54 @@ class ProfilePage extends StatelessWidget {
 
     Widget content() {
       return Expanded(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: defaultMargin,
-          ),
-          color: bgColor3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Account',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 15,
-                  fontWeight: semiBold,
+        child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: defaultMargin,
+            ),
+            color: bgColor3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              InkWell(
-                  onTap: () {
-                    Provider.of<UserProvider>(context, listen: false)
-                        .fetchDataToController();
-                    Navigator.of(context).pushNamed('/edit-profile');
-                  },
-                  child: menuItem('Edit Profile')),
-              InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/my-orders');
-                  },
-                  child: menuItem('Your Orders')),
-              menuItem('Help'),
-              const SizedBox(
-                height: 30,
-              ),
-              Text(
-                'General',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 15,
-                  fontWeight: semiBold,
+                Text(
+                  'Account',
+                  style: primaryTextStyle.copyWith(
+                    fontSize: 15,
+                    fontWeight: semiBold,
+                  ),
                 ),
-              ),
-              menuItem('Privacy & Policy'),
-              menuItem('Term of Service'),
-              menuItem('Rate App'),
-            ],
+                InkWell(
+                    onTap: () {
+                      Provider.of<UserProvider>(context, listen: false)
+                          .fetchDataToController();
+                      Navigator.of(context).pushNamed('/edit-profile');
+                    },
+                    child: menuItem('Edit Profile')),
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/my-orders');
+                    },
+                    child: menuItem('Your Orders')),
+                menuItem('Help'),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'General',
+                  style: primaryTextStyle.copyWith(
+                    fontSize: 15,
+                    fontWeight: semiBold,
+                  ),
+                ),
+                menuItem('Privacy & Policy'),
+                menuItem('Term of Service'),
+                menuItem('Rate App'),
+              ],
+            ),
           ),
         ),
       );
