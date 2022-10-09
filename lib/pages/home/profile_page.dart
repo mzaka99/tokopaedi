@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:tokopaedi/providers/authenticate_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
 
@@ -21,12 +23,26 @@ class ProfilePage extends StatelessWidget {
             child: Consumer<UserProvider>(
               builder: (context, data, _) => Row(
                 children: [
-                  CircleAvatar(
-                    radius: 32,
-                    backgroundImage: data.urlImageUser != null
-                        ? NetworkImage(data.urlImageUser!) as ImageProvider
-                        : const AssetImage(' assets/icon/profile_icon.png'),
-                  ),
+                  data.dataUser!.imageUrl == null
+                      ? const CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              AssetImage('assets/icon/profile_icon.png'),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: CachedNetworkImage(
+                            imageUrl: data.dataUser!.imageUrl!,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer(
+                              child: Container(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ),
+                        ),
                   const SizedBox(
                     width: 16,
                   ),
@@ -137,7 +153,11 @@ class ProfilePage extends StatelessWidget {
                     Navigator.of(context).pushNamed('/edit-profile');
                   },
                   child: menuItem('Edit Profile')),
-              menuItem('Your Orders'),
+              InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/my-orders');
+                  },
+                  child: menuItem('Your Orders')),
               menuItem('Help'),
               const SizedBox(
                 height: 30,

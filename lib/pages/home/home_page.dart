@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
@@ -43,12 +45,26 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: data.urlImageUser != null
-                    ? NetworkImage(data.urlImageUser!) as ImageProvider
-                    : const AssetImage(' assets/icon/profile_icon.png'),
-              ),
+              data.dataUser!.imageUrl == null
+                  ? const CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          AssetImage('assets/icon/profile_icon.png'),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: CachedNetworkImage(
+                        imageUrl: data.dataUser!.imageUrl!,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Shimmer(
+                          child: Container(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
