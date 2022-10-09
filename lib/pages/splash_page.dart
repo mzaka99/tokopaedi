@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/user_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 import '../providers/favorite_provider.dart';
@@ -31,6 +32,8 @@ class _SplashPageState extends State<SplashPage> {
         Future.delayed(const Duration(seconds: 3)).then((_) {
           Provider.of<FavoriteProvider>(context, listen: false)
               .fetchFavoriteList();
+          Provider.of<UserProvider>(context, listen: false)
+              .getData();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         });

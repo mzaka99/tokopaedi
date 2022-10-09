@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:tokopaedi/models/cart_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
 
 class CartProvider with ChangeNotifier {
   late final Map<String, CartModel> _cartItem = {};
+  bool isLoading = false;
   Map<String, CartModel> get cartItem {
     return {..._cartItem};
   }
@@ -48,7 +51,6 @@ class CartProvider with ChangeNotifier {
         ),
       );
     }
-
     notifyListeners();
   }
 
@@ -80,6 +82,41 @@ class CartProvider with ChangeNotifier {
 
   void clear() {
     _cartItem.clear();
+    notifyListeners();
+  }
+
+  Future<void> addOrder(BuildContext context) async {
+    isLoading = true;
+    notifyListeners();
+    final currentUser = FirebaseAuth.instance.currentUser!;
+    await FirebaseFirestore.instance.collection('orders').add({
+      'orderId': Timestamp.now(),
+      'createdAt': Timestamp.now(),
+      'userId': currentUser.uid,
+      'total_price': totalPrice,
+      'total_product': totalProduct,
+      'product': cartItem.values
+          .toList()
+          .map((data) => {
+                'product_id': data.id,
+                'name': data.nameProduct,
+                'price': data.price,
+                'image_url': data.imageUrl,
+                'quantity': data.quantity,
+              })
+          .toList(),
+      'status': 'ON_PROGRESS',
+    }).then((value) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(
+            '/checkout-success',
+            (route) => false,
+          )
+          .then(
+            (_) => clear(),
+          );
+    });
+    isLoading = false;
     notifyListeners();
   }
 }

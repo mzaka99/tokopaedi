@@ -48,7 +48,7 @@ class CheckoutCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: AssetImage(cartItem.imageUrl),
+                  image: NetworkImage(cartItem.imageUrl),
                   fit: BoxFit.cover,
                 ),
               ),

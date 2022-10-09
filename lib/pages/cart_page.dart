@@ -16,10 +16,7 @@ class CartPage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/home',
-                (route) => false,
-              );
+              Navigator.of(context).pop();
             },
             icon: const Icon(
               Icons.chevron_left_rounded,

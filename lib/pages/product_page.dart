@@ -87,8 +87,10 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/cart', (route) => false);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(
+                            '/cart',
+                          );
                         },
                         child: Text(
                           'View My Cart',

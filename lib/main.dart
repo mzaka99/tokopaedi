@@ -6,6 +6,7 @@ import 'package:tokopaedi/pages/checkout_page.dart';
 import 'package:tokopaedi/pages/checkout_success_page.dart';
 import 'package:tokopaedi/pages/edit_profile_page.dart';
 import 'package:tokopaedi/pages/home/main_page.dart';
+import 'package:tokopaedi/pages/my_order_page.dart';
 import 'package:tokopaedi/pages/product_page.dart';
 import 'package:tokopaedi/pages/auth_page.dart';
 import 'package:tokopaedi/pages/splash_page.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
             '/cart': (context) => const CartPage(),
             '/checkout': (context) => const CheckoutPage(),
             '/checkout-success': (context) => const CheckoutSuccesPage(),
+            '/my-orders': (context) => const MyOrderPage(),
           },
         ),
       ),

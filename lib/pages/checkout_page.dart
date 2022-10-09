@@ -266,29 +266,27 @@ class CheckoutPage extends StatelessWidget {
             margin: EdgeInsets.symmetric(
               vertical: defaultMargin,
             ),
-            child: TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(
-                      '/checkout-success',
-                      (route) => false,
-                    )
-                    .then(
-                      (_) => Provider.of<CartProvider>(context, listen: false)
-                          .clear(),
-                    );
-              },
-              style: TextButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  )),
-              child: Text(
-                'Checkout Now',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: semiBold,
-                ),
+            child: Consumer<CartProvider>(
+              builder: (context, data, _) => TextButton(
+                onPressed: () {
+                  data.addOrder(context);
+                },
+                style: TextButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    )),
+                child: data.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Text(
+                        'Checkout Now',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: semiBold,
+                        ),
+                      ),
               ),
             ),
           ),
