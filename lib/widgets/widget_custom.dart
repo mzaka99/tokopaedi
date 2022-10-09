@@ -71,13 +71,20 @@ Widget editProfileInput({
           controller: controller,
           validator: validator,
           decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: primaryTextStyle,
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: subtitleTextColor,
-                ),
-              )),
+            hintText: hintText,
+            hintStyle: primaryTextStyle,
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: subtitleTextColor,
+              ),
+            ),
+            errorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: alertColor,
+              ),
+            ),
+            errorStyle: alertTextStyle,
+          ),
         )
       ],
     ),
