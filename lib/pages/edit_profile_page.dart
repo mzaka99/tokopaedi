@@ -108,6 +108,7 @@ class EditProfilePage extends StatelessWidget {
                     if (value!.isEmpty) {
                       return 'Name cannot be empty.';
                     }
+                    return null;
                   },
                 ),
                 editProfileInput(
@@ -117,6 +118,7 @@ class EditProfilePage extends StatelessWidget {
                     if (value!.isEmpty) {
                       return 'Username cannot be empty.';
                     }
+                    return null;
                   },
                 ),
                 editProfileInput(
@@ -126,6 +128,7 @@ class EditProfilePage extends StatelessWidget {
                     if (value!.isEmpty) {
                       return 'Email cannot be empty.';
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(

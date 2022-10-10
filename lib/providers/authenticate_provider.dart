@@ -61,12 +61,12 @@ class AuthenticateProvider with ChangeNotifier {
           'image_url': '',
         });
       }
-      clearController();
       if (userCredential.user != null) {
+        await UserProvider().getData();
         Future.delayed(const Duration(seconds: 0)).then((_) {
-          UserProvider().getData();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
+          clearController();
         });
       }
     } on FirebaseAuthException catch (e) {

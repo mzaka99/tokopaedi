@@ -32,6 +32,12 @@ class _MainPageState extends State<MainPage> {
         );
   }
 
+  void changeIndex(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget cardButton() {
@@ -143,7 +149,9 @@ class _MainPageState extends State<MainPage> {
         case 1:
           return const ChatPage();
         case 2:
-          return const FavoritePage();
+          return FavoritePage(
+            changeIndexFn: changeIndex,
+          );
         case 3:
           return const ProfilePage();
       }

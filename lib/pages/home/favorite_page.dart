@@ -6,7 +6,8 @@ import 'package:tokopaedi/widgets/favorite_tile.dart';
 import '../../theme.dart';
 
 class FavoritePage extends StatelessWidget {
-  const FavoritePage({Key? key}) : super(key: key);
+  final Function(int index) changeIndexFn;
+  const FavoritePage({Key? key, required this.changeIndexFn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class FavoritePage extends StatelessWidget {
                 height: 44,
                 child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      changeIndexFn(0);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

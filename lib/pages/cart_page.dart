@@ -67,10 +67,7 @@ class CartPage extends StatelessWidget {
               height: 44,
               child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/home',
-                      (route) => false,
-                    );
+                    Navigator.of(context).pop();
                   },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -99,11 +96,12 @@ class CartPage extends StatelessWidget {
 
     Widget customButtonNav(double totalPrice) {
       return SizedBox(
-        height: 180,
+        height: 160,
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+              padding:
+                  EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -120,9 +118,6 @@ class CartPage extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: defaultMargin,
             ),
             const Divider(
               thickness: 0.2,
@@ -179,6 +174,14 @@ class CartPage extends StatelessWidget {
             ? emptyCart()
             : Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8, top: 5),
+                    child: Text(
+                      '*the products in the cart will be lost if you close the app.',
+                      style: subtitleTextSytle.copyWith(fontSize: 12),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
                   Expanded(
                     child: ListView.builder(
                       padding: EdgeInsets.symmetric(
