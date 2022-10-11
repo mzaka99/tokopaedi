@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:tokopaedi/models/favorite_product_model.dart';
 import 'package:tokopaedi/theme.dart';
 
@@ -35,8 +37,12 @@ class FavoriteTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                product.imageUrl,
+              child: CachedNetworkImage(
+                imageUrl: product.imageUrl,
+                placeholder: (context, url) => Shimmer(
+                    child: Container(
+                  color: Colors.grey.shade300,
+                )),
                 width: 60,
               ),
             ),

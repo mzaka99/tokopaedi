@@ -85,10 +85,15 @@ class ProfilePage extends StatelessWidget {
                               onpress: () async {
                                 Provider.of<AuthenticateProvider>(context,
                                         listen: false)
-                                    .logOut();
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/auth', (route) => false,
-                                    arguments: true);
+                                    .logOut(context);
+                                Navigator.of(context)
+                                    .pushNamedAndRemoveUntil(
+                                        '/auth', (route) => false,
+                                        arguments: true)
+                                    .then((value) => Provider.of<UserProvider>(
+                                            context,
+                                            listen: false)
+                                        .userLogOut());
                               }),
                         );
                       },

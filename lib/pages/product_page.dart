@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:tokopaedi/models/product_model.dart';
 import 'package:tokopaedi/pages/detail_chat_page.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
@@ -159,11 +161,15 @@ class _ProductPageState extends State<ProductPage> {
           ),
           CarouselSlider(
             items: urlImages
-                .map((data) => Image.network(
-                      data.url,
+                .map((data) => CachedNetworkImage(
                       width: MediaQuery.of(context).size.width,
                       height: 310,
                       fit: BoxFit.cover,
+                      imageUrl: data.url,
+                      placeholder: (context, url) => Shimmer(
+                          child: Container(
+                        color: Colors.grey.shade300,
+                      )),
                     ))
                 .toList(),
             options: CarouselOptions(

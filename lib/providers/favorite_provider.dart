@@ -35,7 +35,7 @@ class FavoriteProvider with ChangeNotifier {
     bool statusProduct = isFavoriteProduct(product.id);
     if (statusProduct) {
       _favProductList!.removeWhere((data) => data.id == product.id);
-      LocalDBHelper.remove('favorite_list', product.id);
+      LocalDBHelper.remove('favorite_list', [product.id]);
     } else {
       _favProductList!.add(
         FavoriteProductModel(
@@ -67,6 +67,18 @@ class FavoriteProvider with ChangeNotifier {
       return false;
     } else {
       return true;
+    }
+  }
+
+  Future<void> cleanFavorite() async {
+    List dataList = await LocalDBHelper.getData('favorite_list');
+    if (dataList.isEmpty) {
+      return;
+    } else {
+      List list = dataList.map((data) => data['id']).toList();
+      LocalDBHelper.deleteTable('favorite_list', list);
+      _favProductList = [];
+      notifyListeners();
     }
   }
 }

@@ -30,20 +30,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => AuthenticateProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => CategoryProductProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
-        ChangeNotifierProvider(create: (context) => AuthenticateProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Tokopaedi',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

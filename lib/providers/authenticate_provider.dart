@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
 
 import '../widgets/widget_custom.dart';
@@ -62,11 +64,14 @@ class AuthenticateProvider with ChangeNotifier {
         });
       }
       if (userCredential.user != null) {
-        await UserProvider().getData();
         Future.delayed(const Duration(seconds: 0)).then((_) {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/home', (route) => false);
-          clearController();
+          Provider.of<UserProvider>(context, listen: false)
+              .getData()
+              .whenComplete(() {
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/home', (route) => false);
+            clearController();
+          });
         });
       }
     } on FirebaseAuthException catch (e) {
@@ -89,8 +94,12 @@ class AuthenticateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void logOut() async {
+  Future<void> logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
+    Future.delayed(const Duration(seconds: 0)).then((_) {
+      Provider.of<FavoriteProvider>(context, listen: false).cleanFavorite();
+    });
+    isLogin = true;
     notifyListeners();
   }
 }

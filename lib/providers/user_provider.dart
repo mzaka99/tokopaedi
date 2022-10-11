@@ -11,6 +11,7 @@ import '../widgets/widget_custom.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? dataUser;
+  bool loadDataUser = false;
   bool isLoading = false;
   bool isSucces = false;
   bool activeSubmit = false;
@@ -25,20 +26,26 @@ class UserProvider with ChangeNotifier {
   String? urlImageUser;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  Future<dynamic> getData() async {
+  Future<void> getData() async {
+    loadDataUser = true;
+    notifyListeners();
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final DocumentReference document =
         FirebaseFirestore.instance.collection("users").doc(userId);
+    UserModel? loadData;
 
     await document.get().then<dynamic>((DocumentSnapshot snapshot) async {
-      dataUser = UserModel(
+      loadData = UserModel(
         fullName: snapshot.get('full_name'),
         userName: snapshot.get('username'),
         email: snapshot.get('email'),
         imageUrl: snapshot.get('image_url'),
       );
-      notifyListeners();
     });
+    dataUser = loadData;
+
+    loadDataUser = false;
+    notifyListeners();
   }
 
   void fetchDataToController() {
@@ -156,5 +163,10 @@ class UserProvider with ChangeNotifier {
         },
       );
     }
+  }
+
+  void userLogOut() {
+    dataUser = null;
+    notifyListeners();
   }
 }

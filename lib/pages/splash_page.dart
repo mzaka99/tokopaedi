@@ -23,8 +23,6 @@ class _SplashPageState extends State<SplashPage> {
     _listener = FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event == null) {
         Future.delayed(const Duration(seconds: 3)).then((_) {
-          Provider.of<FavoriteProvider>(context, listen: false)
-              .fetchFavoriteList();
           Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false,
               arguments: true);
         });
@@ -32,8 +30,7 @@ class _SplashPageState extends State<SplashPage> {
         Future.delayed(const Duration(seconds: 3)).then((_) {
           Provider.of<FavoriteProvider>(context, listen: false)
               .fetchFavoriteList();
-          Provider.of<UserProvider>(context, listen: false)
-              .getData();
+          Provider.of<UserProvider>(context, listen: false).getData();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         });

@@ -47,6 +47,72 @@ Widget customInput({
   );
 }
 
+Widget emptyContent({
+  required String assetIcon,
+  required String title,
+  required String subtitle,
+  VoidCallback? onpress,
+  bool withButton = true,
+}) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          assetIcon,
+          width: 80,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(
+          title,
+          style: primaryTextStyle.copyWith(
+            fontSize: 16,
+            fontWeight: medium,
+          ),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        Text(
+          subtitle,
+          style: secondaryTextStyle,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        if (withButton)
+          SizedBox(
+            height: 44,
+            child: TextButton(
+              onPressed: onpress,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 10,
+                ),
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    12,
+                  ),
+                ),
+              ),
+              child: Text(
+                'Explore Store',
+                style: primaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
 Widget editProfileInput({
   required String title,
   required TextEditingController controller,

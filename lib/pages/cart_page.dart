@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
-import 'package:tokopaedi/widgets/cart_cart.dart';
+import 'package:tokopaedi/widgets/cart_card.dart';
+import 'package:tokopaedi/widgets/widget_custom.dart';
 
 import '../theme.dart';
 
@@ -31,66 +32,6 @@ class CartPage extends StatelessWidget {
           ),
         ),
         elevation: 0,
-      );
-    }
-
-    Widget emptyCart() {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/icon/icon_cart_empty.png',
-              width: 80,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Opss! Your Cart is Empty',
-              style: primaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              'Let\'s find your favorite shoes',
-              style: secondaryTextStyle,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 44,
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 10,
-                    ),
-                    backgroundColor: primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        12,
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Explore Store',
-                    style: primaryTextStyle.copyWith(
-                      fontSize: 16,
-                      fontWeight: medium,
-                    ),
-                  )),
-            )
-          ],
-        ),
       );
     }
 
@@ -171,7 +112,13 @@ class CartPage extends StatelessWidget {
       appBar: header(),
       body: Consumer<CartProvider>(
         builder: (context, data, _) => data.cartItem.isEmpty
-            ? emptyCart()
+            ? emptyContent(
+                assetIcon: 'assets/icon/icon_cart_empty.png',
+                title: 'Opss! Your Cart is Empty',
+                subtitle: 'Let\'s find your favorite shoes',
+                onpress: () {
+                  Navigator.of(context).pop();
+                })
             : Column(
                 children: [
                   Padding(

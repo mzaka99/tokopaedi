@@ -8,13 +8,18 @@ import 'package:tokopaedi/providers/user_provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/product_card.dart';
 import 'package:tokopaedi/widgets/product_tile.dart';
+import 'package:tokopaedi/widgets/widget_custom.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget header() {
+    Widget header({
+      required String fullname,
+      required String username,
+      required String imgurl,
+    }) {
       return Container(
         margin: EdgeInsets.only(
             top: defaultMargin, left: defaultMargin, right: defaultMargin),
@@ -27,7 +32,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Hallo, ${data.dataUser!.fullName}",
+                      "Hallo, $fullname",
                       maxLines: 1,
                       style: primaryTextStyle.copyWith(
                         fontSize: 24,
@@ -36,7 +41,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '@${data.dataUser!.userName}',
+                      '@$username',
                       style: subtitleTextSytle.copyWith(
                         fontSize: 16,
                         fontWeight: regular,
@@ -45,7 +50,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              data.dataUser!.imageUrl == ''
+              imgurl == ''
                   ? const CircleAvatar(
                       radius: 30,
                       backgroundImage:
@@ -54,7 +59,7 @@ class HomePage extends StatelessWidget {
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: CachedNetworkImage(
-                        imageUrl: data.dataUser!.imageUrl!,
+                        imageUrl: imgurl,
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
@@ -207,43 +212,6 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget emptyCart() {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 100,
-            ),
-            Image.asset(
-              'assets/icon/icon_cart_empty.png',
-              width: 80,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Sorry, the shoes doesn\'t exist',
-              style: primaryTextStyle.copyWith(
-                fontSize: 16,
-                fontWeight: medium,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              'Let\'s find other shoes',
-              style: secondaryTextStyle,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
-      );
-    }
-
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () => Provider.of<ProductProvider>(context, listen: false)
@@ -253,9 +221,11 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Consumer2<CategoryProductProvider, ProductProvider>(
-                builder: (contex, dataCategory, dataProduct, _) =>
-                    dataProduct.isLoading || dataCategory.isLoading
+              Consumer3<UserProvider, CategoryProductProvider, ProductProvider>(
+                builder: (contex, dataUser, dataCategory, dataProduct, _) =>
+                    dataProduct.isLoading ||
+                            dataCategory.isLoading ||
+                            dataUser.loadDataUser
                         ? SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 defaultMargin,
@@ -265,14 +235,24 @@ class HomePage extends StatelessWidget {
                           )
                         : Column(
                             children: [
-                              header(),
+                              header(
+                                fullname: dataUser.dataUser!.fullName,
+                                username: dataUser.dataUser!.userName,
+                                imgurl: dataUser.dataUser!.imageUrl!,
+                              ),
                               categories(),
                               dataCategory.categoryId != 'cp0' &&
                                       Provider.of<ProductProvider>(context,
                                               listen: false)
                                           .getProductBy(dataCategory.categoryId)
                                           .isEmpty
-                                  ? emptyCart()
+                                  ? emptyContent(
+                                      assetIcon:
+                                          'assets/icon/icon_cart_empty.png',
+                                      title: 'Sorry, the shoes doesn\'t exist',
+                                      subtitle: 'Let\'s find other shoes',
+                                      withButton: false,
+                                    )
                                   : Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,

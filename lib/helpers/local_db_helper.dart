@@ -15,15 +15,22 @@ class LocalDBHelper {
     );
   }
 
+  static Future<void> deleteTable(String table, List list) async {
+    final db = await LocalDBHelper.database();
+    await db.delete(table,
+        where: 'id IN (${List.filled(list.length, '?').join(',')})',
+        whereArgs: list);
+  }
+
   static Future<void> insert(String table, dynamic data) async {
     final db = await LocalDBHelper.database();
     await db.insert(table, data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
   }
 
-  static Future<void> remove(String table, String id) async {
+  static Future<void> remove(String table, List<dynamic> id) async {
     final db = await LocalDBHelper.database();
-    await db.delete(table, where: 'id = ?', whereArgs: [id]);
+    await db.delete(table, where: 'id = ?', whereArgs: id);
   }
 
   static Future<List<Map<String, dynamic>>> getData(String table) async {

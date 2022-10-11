@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/widgets/favorite_tile.dart';
+import 'package:tokopaedi/widgets/widget_custom.dart';
 
 import '../../theme.dart';
 
@@ -27,68 +28,6 @@ class FavoritePage extends StatelessWidget {
       );
     }
 
-    Widget emptyFav() {
-      return Container(
-          color: bgColor3,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/icon/fav_icon.png',
-                color: const Color(0xff38ABBE),
-                width: 74,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                ' You don\'t have dream shoes?',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                'Let\'s find your favorite shoes',
-                style: secondaryTextStyle,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 44,
-                child: TextButton(
-                    onPressed: () {
-                      changeIndexFn(0);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 10,
-                      ),
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      'Explore Store',
-                      style: primaryTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: medium,
-                      ),
-                    )),
-              )
-            ],
-          ));
-    }
-
     Widget content() {
       return Expanded(
         child: Container(
@@ -100,7 +39,14 @@ class FavoritePage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   )
                 : data.favProductList.isEmpty
-                    ? emptyFav()
+                    ? emptyContent(
+                        assetIcon: 'assets/icon/fav_icon_blue.png',
+                        title: 'You don\'t have dream shoes?',
+                        subtitle: 'Let\'s find your favorite shoes',
+                        onpress: () {
+                          changeIndexFn(0);
+                        },
+                      )
                     : ListView.builder(
                         padding:
                             EdgeInsets.symmetric(horizontal: defaultMargin),
