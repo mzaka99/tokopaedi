@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tokopaedi/models/cart_model.dart';
+import 'package:tokopaedi/models/my_order_model.dart';
+import 'package:tokopaedi/providers/my_order_provider.dart';
 import 'package:tokopaedi/widgets/my_order_card.dart';
+import 'package:tokopaedi/widgets/widget_custom.dart';
 
 import '../providers/cart_provider.dart';
 import '../theme.dart';
@@ -130,27 +135,132 @@ class MyOrderPage extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Consumer<CartProvider>(
-                      builder: (context, data, _) => data.cartItem.isEmpty
-                          ? emptyCart()
-                          : Column(
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: data.cartItem.length,
-                                    itemBuilder: (context, index) =>
-                                        MyOrderCard(
-                                      productId:
-                                          data.cartItem.keys.toList()[index],
-                                      cart:
-                                          data.cartItem.values.toList()[index],
+                    StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream:
+                          Provider.of<MyOrderProvider>(context, listen: false)
+                              .getDataOrder('ON_PROGRESS'),
+                      builder: (context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) =>
+                          snapshot.connectionState == ConnectionState.waiting
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : snapshot.data!.docs.isEmpty
+                                  ? emptyContent(
+                                      assetIcon:
+                                          'assets/icon/icon_cart_empty.png',
+                                      title: 'No Orders Yet.',
+                                      subtitle: 'Let\'s Place Order.',
+                                      withButton: false,
+                                    )
+                                  : Column(
+                                      children: [
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                snapshot.data!.docs.length,
+                                            itemBuilder: (context, index) =>
+                                                MyOrderCard(
+                                              docId:
+                                                  snapshot.data!.docs[index].id,
+                                              cart: MyOrderModel(
+                                                  orderId: snapshot.data!
+                                                      .docs[index]['orderId']
+                                                      .toString(),
+                                                  totalProduct:
+                                                      snapshot.data!.docs[index]
+                                                          ['total_product'],
+                                                  totalPrice:
+                                                      snapshot.data!.docs[index]
+                                                          ['total_price'],
+                                                  status: snapshot.data!
+                                                      .docs[index]['status'],
+                                                  products: (snapshot
+                                                                  .data!.docs[
+                                                              index]['product']
+                                                          as List<dynamic>)
+                                                      .map((data) => CartModel(
+                                                            id: data[
+                                                                'product_id'],
+                                                            nameProduct:
+                                                                data['name'],
+                                                            quantity: data[
+                                                                'quantity'],
+                                                            price:
+                                                                data['price'],
+                                                            imageUrl: data[
+                                                                'image_url'],
+                                                          ))
+                                                      .toList()),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
                     ),
-                    Container(),
+                    StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream:
+                          Provider.of<MyOrderProvider>(context, listen: false)
+                              .getDataOrder('RECEIVED'),
+                      builder: (context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) =>
+                          snapshot.connectionState == ConnectionState.waiting
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : snapshot.data!.docs.isEmpty
+                                  ? emptyContent(
+                                      assetIcon:
+                                          'assets/icon/icon_cart_empty.png',
+                                      title: 'No Orders Yet.',
+                                      subtitle: 'Let\'s Place Order.',
+                                      withButton: false,
+                                    )
+                                  : Column(
+                                      children: [
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                snapshot.data!.docs.length,
+                                            itemBuilder: (context, index) =>
+                                                MyOrderCard(
+                                              docId:
+                                                  snapshot.data!.docs[index].id,
+                                              cart: MyOrderModel(
+                                                  orderId: snapshot.data!
+                                                      .docs[index]['orderId']
+                                                      .toString(),
+                                                  totalProduct:
+                                                      snapshot.data!.docs[index]
+                                                          ['total_product'],
+                                                  totalPrice:
+                                                      snapshot.data!.docs[index]
+                                                          ['total_price'],
+                                                  status: snapshot.data!
+                                                      .docs[index]['status'],
+                                                  products: (snapshot
+                                                                  .data!.docs[
+                                                              index]['product']
+                                                          as List<dynamic>)
+                                                      .map((data) => CartModel(
+                                                            id: data[
+                                                                'product_id'],
+                                                            nameProduct:
+                                                                data['name'],
+                                                            quantity: data[
+                                                                'quantity'],
+                                                            price:
+                                                                data['price'],
+                                                            imageUrl: data[
+                                                                'image_url'],
+                                                          ))
+                                                      .toList()),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                    ),
                   ],
                 ),
               ),

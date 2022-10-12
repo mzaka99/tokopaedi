@@ -15,6 +15,7 @@ import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/chat_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
+import 'package:tokopaedi/providers/my_order_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
 
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => MyOrderProvider()),
       ],
       child: GestureDetector(
         onTap: () {

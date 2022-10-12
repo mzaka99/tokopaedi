@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:tokopaedi/models/cart_model.dart';
+import 'package:provider/provider.dart';
+import 'package:tokopaedi/models/my_order_model.dart';
+import 'package:tokopaedi/providers/my_order_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
 class MyOrderCard extends StatelessWidget {
   const MyOrderCard({
     Key? key,
     required this.cart,
-    required this.productId,
+    required this.docId,
   }) : super(key: key);
-  final String productId;
-  final CartModel cart;
+  final String docId;
+  final MyOrderModel cart;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class MyOrderCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
                       image: NetworkImage(
-                        cart.imageUrl,
+                        cart.products[0].imageUrl,
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -48,13 +50,13 @@ class MyOrderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        cart.nameProduct,
+                        cart.products[0].nameProduct,
                         style: primaryTextStyle.copyWith(
                           fontWeight: semiBold,
                         ),
                       ),
                       Text(
-                        '\$${cart.price}',
+                        '\$${cart.products[0].price}',
                         style: priceTextStyle,
                       ),
                     ],
@@ -63,7 +65,7 @@ class MyOrderCard extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '${cart.quantity}x',
+                      '${cart.products[0].quantity}x',
                       style: primaryTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -86,7 +88,7 @@ class MyOrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '1 prdouct',
+                  '${cart.totalProduct} prdouct',
                   style: secondaryTextStyle,
                 ),
                 Row(
@@ -96,7 +98,7 @@ class MyOrderCard extends StatelessWidget {
                       'Total : ',
                       style: primaryTextStyle,
                     ),
-                    Text('\$1500', style: priceTextStyle),
+                    Text('\$${cart.totalPrice}', style: priceTextStyle),
                   ],
                 ),
               ],
@@ -114,14 +116,21 @@ class MyOrderCard extends StatelessWidget {
                 width: 150,
                 height: 40,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: cart.status == 'ON_PROGRESS'
+                      ? () {
+                          Provider.of<MyOrderProvider>(context, listen: false)
+                              .receiveOrder(docId);
+                        }
+                      : null,
                   style: TextButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: cart.status == 'ON_PROGRESS'
+                          ? primaryColor
+                          : secondaryTextColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       )),
                   child: Text(
-                    'Accept',
+                    cart.status == 'ON_PROGRESS' ? 'Accept' : 'Received',
                     style: primaryTextStyle,
                   ),
                 ),
