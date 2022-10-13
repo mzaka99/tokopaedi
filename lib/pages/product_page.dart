@@ -18,14 +18,6 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  List images(String url) => [
-        url,
-        url,
-        url,
-      ];
-
-  bool isFav = false;
-
   @override
   Widget build(BuildContext context) {
     Future<void> showSuccesDialog() async {
@@ -150,7 +142,12 @@ class _ProductPageState extends State<ProductPage> {
                   icon: const Icon(Icons.chevron_left_sharp),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      '/cart',
+                      arguments: 'from_product_page',
+                    );
+                  },
                   icon: const Icon(
                     Icons.shopping_bag_rounded,
                     color: bgColor1,

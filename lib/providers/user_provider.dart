@@ -19,7 +19,6 @@ class UserProvider with ChangeNotifier {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final mAuth = FirebaseAuth.instance;
   File? imageUser;
 
@@ -56,7 +55,7 @@ class UserProvider with ChangeNotifier {
     fullNameController.addListener(() {
       if (fullNameController.text == dataUser!.fullName &&
           userNameController.text == dataUser!.userName &&
-          emailController.text == dataUser!.email) {
+          imageUser == null) {
         activeSubmit = false;
         notifyListeners();
       } else {
@@ -67,18 +66,7 @@ class UserProvider with ChangeNotifier {
     userNameController.addListener(() {
       if (fullNameController.text == dataUser!.fullName &&
           userNameController.text == dataUser!.userName &&
-          emailController.text == dataUser!.email) {
-        activeSubmit = false;
-        notifyListeners();
-      } else {
-        activeSubmit = true;
-        notifyListeners();
-      }
-    });
-    emailController.addListener(() {
-      if (fullNameController.text == dataUser!.fullName &&
-          userNameController.text == dataUser!.userName &&
-          emailController.text == dataUser!.email) {
+          imageUser == null) {
         activeSubmit = false;
         notifyListeners();
       } else {
@@ -103,6 +91,7 @@ class UserProvider with ChangeNotifier {
       return;
     }
     imageUser = File(pickedImage.path);
+    activeSubmit = true;
     notifyListeners();
   }
 
@@ -112,56 +101,41 @@ class UserProvider with ChangeNotifier {
       return;
     } else {
       final curentUser = FirebaseAuth.instance.currentUser!;
-      passwordController.clear();
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return changeEmailDialog(
-            context: context,
-            controller: passwordController,
-            onpress: isSucces
-                ? () {
-                    Navigator.of(context).pop();
-                    isLoading = false;
-                    isSucces = false;
-                    notifyListeners();
-                  }
-                : () async {
-                    isLoading = true;
-                    notifyListeners();
-                    final credential = EmailAuthProvider.credential(
-                        email: curentUser.email!,
-                        password: passwordController.text.trim());
-                    curentUser.reauthenticateWithCredential(credential).then(
-                          (value) => value.user
-                              ?.updateEmail(emailController.text.trim()),
-                        );
-                    if (imageUser != null) {
-                      final ref = FirebaseStorage.instance
-                          .ref()
-                          .child('user_image')
-                          .child('${curentUser.uid}.jpg');
-                      await ref.putFile(imageUser!);
-                      final url = await ref.getDownloadURL();
-                      await users.doc(curentUser.uid).update({
-                        'image_url': url,
-                      });
-                    }
-                    await users.doc(curentUser.uid).update({
-                      'full_name': fullNameController.text.trim(),
-                      'username': userNameController.text.trim(),
-                      'email': emailController.text.trim(),
-                    }).then((_) {
-                      getData();
-                      isLoading = false;
-                      isSucces = true;
-                      notifyListeners();
-                    });
-                  },
-          );
-        },
-      );
+      isLoading = true;
+      notifyListeners();
+      if (imageUser != null) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${curentUser.uid}.jpg');
+        await ref.putFile(imageUser!);
+        final url = await ref.getDownloadURL();
+        await users.doc(curentUser.uid).update({
+          'image_url': url,
+        });
+      }
+      await users.doc(curentUser.uid).update({
+        'full_name': fullNameController.text.trim(),
+        'username': userNameController.text.trim(),
+      }).then((_) {
+        getData();
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return customAlertDialog(
+              context: context,
+              onpress: () {
+                Navigator.of(context).pop();
+                notifyListeners();
+              },
+            );
+          },
+        );
+        activeSubmit = false;
+        isLoading = false;
+        notifyListeners();
+      });
     }
   }
 

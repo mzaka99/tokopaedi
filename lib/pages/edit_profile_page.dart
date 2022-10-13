@@ -34,18 +34,23 @@ class EditProfilePage extends StatelessWidget {
         ),
         actions: [
           Consumer<UserProvider>(
-            builder: (context, data, _) => IconButton(
-              onPressed: data.activeSubmit
-                  ? () {
-                      Provider.of<UserProvider>(context, listen: false)
-                          .updateDataUser(context);
-                    }
-                  : null,
-              icon: const Icon(
-                Icons.check,
-                color: primaryColor,
-              ),
-            ),
+            builder: (context, data, _) => data.isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: CircularProgressIndicator(),
+                  )
+                : IconButton(
+                    onPressed: data.activeSubmit
+                        ? () {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .updateDataUser(context);
+                          }
+                        : null,
+                    icon: const Icon(
+                      Icons.check,
+                      color: primaryColor,
+                    ),
+                  ),
           ),
         ],
       );
@@ -122,6 +127,7 @@ class EditProfilePage extends StatelessWidget {
                   },
                 ),
                 editProfileInput(
+                  enabled: false,
                   title: 'Email Address',
                   controller: data.emailController,
                   validator: (value) {

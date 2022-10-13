@@ -118,6 +118,7 @@ Widget editProfileInput({
   required TextEditingController controller,
   String? Function(String?)? validator,
   String? hintText,
+  bool enabled = true,
 }) {
   return Container(
     margin: EdgeInsets.only(
@@ -133,13 +134,19 @@ Widget editProfileInput({
           ),
         ),
         TextFormField(
-          style: primaryTextStyle,
+          style: enabled ? primaryTextStyle : subtitleTextSytle,
           controller: controller,
           validator: validator,
+          enabled: enabled,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: primaryTextStyle,
             enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: subtitleTextColor,
+              ),
+            ),
+            disabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(
                 color: subtitleTextColor,
               ),
@@ -196,10 +203,9 @@ InputDecoration inputDecor({
   );
 }
 
-Widget changeEmailDialog({
+Widget customAlertDialog({
   required BuildContext context,
   required VoidCallback onpress,
-  required TextEditingController controller,
   String? Function(String?)? validator,
 }) {
   return SizedBox(
@@ -210,120 +216,101 @@ Widget changeEmailDialog({
         borderRadius: BorderRadius.circular(defaultMargin),
       ),
       content: SingleChildScrollView(
-        child: Consumer<UserProvider>(
-          builder: (context, data, _) => Column(
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: primaryTextColor,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: primaryTextColor,
+                ),
+              ),
+            ),
+            Image.asset(
+              'assets/icon/succes_icon.png',
+              width: 100,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              'Edit Profile',
+              style: primaryTextStyle.copyWith(
+                fontSize: 18,
+                fontWeight: semiBold,
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              'Successfully Changed Profile.',
+              style: secondaryTextStyle,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: 100,
+              height: 44,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: onpress,
+                child: Text(
+                  'Back',
+                  style: primaryTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
                   ),
                 ),
               ),
-              if (data.isSucces)
-                Image.asset(
-                  'assets/icon/succes_icon.png',
-                  width: 100,
-                ),
-              const SizedBox(
-                height: 12,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget loadingDialog({
+  required BuildContext context,
+  required VoidCallback onpress,
+}) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+    child: AlertDialog(
+      backgroundColor: bgColor3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(defaultMargin),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 12,
+            ),
+            const CircularProgressIndicator(),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Loading..',
+              style: primaryTextStyle.copyWith(
+                fontSize: 18,
+                fontWeight: semiBold,
               ),
-              Text(
-                'Edit Profile',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 18,
-                  fontWeight: semiBold,
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                data.isSucces
-                    ? 'Successfully Changed Profile.'
-                    : 'Please Enter Your Password.',
-                style: secondaryTextStyle,
-                textAlign: TextAlign.center,
-              ),
-              if (!data.isSucces)
-                TextFormField(
-                  style: primaryTextStyle,
-                  controller: controller,
-                  obscureText: true,
-                  validator: validator,
-                  decoration: InputDecoration(
-                      hintText: 'Your Password',
-                      hintStyle: subtitleTextSytle,
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: subtitleTextColor,
-                        ),
-                      )),
-                ),
-              const SizedBox(
-                height: 20,
-              ),
-              data.isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (!data.isSucces)
-                          SizedBox(
-                            width: 100,
-                            height: 45,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(
-                                    color: subtitleTextColor, width: 2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: primaryTextStyle.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (!data.isSucces) const Spacer(),
-                        SizedBox(
-                          width: 100,
-                          height: 44,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            onPressed: onpress,
-                            child: Text(
-                              data.isSucces ? 'Back' : 'Ok',
-                              style: primaryTextStyle.copyWith(
-                                fontSize: 16,
-                                fontWeight: medium,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),

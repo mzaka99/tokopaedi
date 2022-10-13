@@ -107,6 +107,7 @@ class CartPage extends StatelessWidget {
       );
     }
 
+    final args = ModalRoute.of(context)!.settings.arguments as String?;
     return Scaffold(
       backgroundColor: bgColor3,
       appBar: header(),
@@ -116,9 +117,14 @@ class CartPage extends StatelessWidget {
                 assetIcon: 'assets/icon/icon_cart_empty.png',
                 title: 'Opss! Your Cart is Empty',
                 subtitle: 'Let\'s find your favorite shoes',
-                onpress: () {
-                  Navigator.of(context).pop();
-                })
+                onpress: args != null
+                    ? () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }
+                    : () {
+                        Navigator.of(context).pop();
+                      })
             : Column(
                 children: [
                   Padding(
