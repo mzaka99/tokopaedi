@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/pages/cart_page.dart';
@@ -15,13 +16,23 @@ import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
 import 'package:tokopaedi/providers/chat_provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
+import 'package:tokopaedi/providers/fcm_provider.dart';
 import 'package:tokopaedi/providers/my_order_provider.dart';
 import 'package:tokopaedi/providers/product_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
+import 'package:timezone/data/latest_10y.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  initializeTimeZones();
   await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getInitialMessage();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 
@@ -39,6 +50,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CartProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
         ChangeNotifierProvider(create: (context) => MyOrderProvider()),
+        ChangeNotifierProvider(create: (context) => FCMProvider()),
       ],
       child: GestureDetector(
         onTap: () {

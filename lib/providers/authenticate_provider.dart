@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
+import 'package:tokopaedi/providers/fcm_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
 
 import '../widgets/widget_custom.dart';
@@ -65,6 +66,7 @@ class AuthenticateProvider with ChangeNotifier {
       }
       if (userCredential.user != null) {
         Future.delayed(const Duration(seconds: 0)).then((_) {
+          Provider.of<FCMProvider>(context, listen: false).requestPermission();
           Provider.of<UserProvider>(context, listen: false)
               .getData()
               .whenComplete(() {

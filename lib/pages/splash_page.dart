@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tokopaedi/providers/fcm_provider.dart';
 import 'package:tokopaedi/providers/user_provider.dart';
 import 'package:tokopaedi/theme.dart';
 
@@ -20,6 +21,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void initState() {
+    Provider.of<FCMProvider>(context, listen: false).initInfo();
     _listener = FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event == null) {
         Future.delayed(const Duration(seconds: 3)).then((_) {
