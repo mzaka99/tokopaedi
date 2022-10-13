@@ -119,7 +119,7 @@ class MyOrderCard extends StatelessWidget {
                   onPressed: cart.status == 'ON_PROGRESS'
                       ? () {
                           Provider.of<MyOrderProvider>(context, listen: false)
-                              .receiveOrder(docId);
+                              .receiveOrder(context, docId);
                         }
                       : null,
                   style: TextButton.styleFrom(

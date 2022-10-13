@@ -92,12 +92,12 @@ class FCMProvider with ChangeNotifier {
     }
   }
 
-  void showNotification() async {
+  void showNotification({bool isOrder = true}) async {
     AndroidNotificationDetails androidNotificationDetails =
         const AndroidNotificationDetails(
       'tokopaedi_channel',
       'tokopaedi_channel',
-      icon: '@mipmap/ic_launcher',
+      icon: '@mipmap/launcher_icon',
       importance: Importance.max,
       priority: Priority.max,
     );
@@ -116,8 +116,10 @@ class FCMProvider with ChangeNotifier {
 
     await notificationsPlugin.zonedSchedule(
         0,
-        "Your order on progress.",
-        "Please wait, until the order arrives.",
+        isOrder ? "Your order on progress." : "Your order has been received.",
+        isOrder
+            ? "Please wait, until the order arrives."
+            : "Thank you for ordering in our shop.",
         tz.TZDateTime.from(scheduleDate, tz.local),
         notificationDetails,
         uiLocalNotificationDateInterpretation:

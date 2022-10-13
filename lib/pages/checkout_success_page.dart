@@ -29,14 +29,14 @@ class CheckoutSuccesPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/icon/icon_cart_empty.png',
-              width: 80,
+              'assets/icon/succes_icon.png',
+              width: 100,
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              'You made a transaction',
+              'Your transaction was successful',
               style: primaryTextStyle.copyWith(
                 fontSize: 16,
                 fontWeight: medium,
@@ -92,7 +92,13 @@ class CheckoutSuccesPage extends StatelessWidget {
             SizedBox(
               height: 44,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context)
+                      .restorablePushNamed('/home', arguments: 3);
+                  Navigator.of(context).pushNamed(
+                    '/my-orders',
+                  );
+                },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,

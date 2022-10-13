@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tokopaedi/models/cart_model.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/fcm_provider.dart';
 
 class CartProvider with ChangeNotifier {
   late final Map<String, CartModel> _cartItem = {};
@@ -107,6 +109,8 @@ class CartProvider with ChangeNotifier {
           .toList(),
       'status': 'ON_PROGRESS',
     }).then((value) {
+      clear();
+      Provider.of<FCMProvider>(context, listen: false).showNotification();
       Navigator.of(context)
           .pushNamedAndRemoveUntil(
             '/checkout-success',

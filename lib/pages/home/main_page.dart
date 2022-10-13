@@ -32,6 +32,17 @@ class _MainPageState extends State<MainPage> {
         );
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as int?;
+    if (args != null) {
+      setState(() {
+        currentIndex = args;
+      });
+    }
+  }
+
   void changeIndex(int index) {
     setState(() {
       currentIndex = index;
