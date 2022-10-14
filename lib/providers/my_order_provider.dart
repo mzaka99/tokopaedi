@@ -1,18 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tokopaedi/models/my_order_model.dart';
 import 'package:tokopaedi/providers/fcm_provider.dart';
 import 'package:tokopaedi/widgets/widget_custom.dart';
 
 class MyOrderProvider with ChangeNotifier {
-  List<MyOrderModel> _dataOrder = [];
-  List<MyOrderModel> get dataOrder {
-    return [..._dataOrder];
-  }
-
   Stream<QuerySnapshot<Map<String, dynamic>>>? getDataOrder(String status) {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tokopaedi/models/product_model.dart';
+import 'package:tokopaedi/providers/message.provider.dart';
 import 'package:tokopaedi/theme.dart';
 import 'package:tokopaedi/widgets/chat_bubble.dart';
 
@@ -25,6 +28,9 @@ class _DetailChatPageState extends State<DetailChatPage> {
         backgroundColor: bgColor1,
         leading: IconButton(
             onPressed: () {
+              Provider.of<MessageProvider>(context, listen: false)
+                  .controller
+                  .clear();
               Navigator.of(context).pop();
             },
             icon: const Icon(
@@ -45,7 +51,7 @@ class _DetailChatPageState extends State<DetailChatPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Shoe Store',
+                    'Tokopaedi',
                     style: primaryTextStyle.copyWith(
                       fontSize: 14,
                       fontWeight: medium,
@@ -142,47 +148,64 @@ class _DetailChatPageState extends State<DetailChatPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             widget.productModel == null ? const SizedBox() : productReview(),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 45,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: bgColor4,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: TextFormField(
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Hi, This item is still available?',
-                          hintStyle: subtitleTextSytle,
+            Consumer<MessageProvider>(
+              builder: (context, data, _) => Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 45,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: bgColor4,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: TextFormField(
+                          controller: data.controller,
+                          style: primaryTextStyle,
+                          decoration: InputDecoration.collapsed(
+                            hintText: 'type something..',
+                            hintStyle: subtitleTextSytle,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(12.5),
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.send_sharp,
-                      color: primaryTextColor,
-                      size: 18,
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  InkWell(
+                    onTap: !data.isActive
+                        ? null
+                        : () {
+                            Provider.of<MessageProvider>(context, listen: false)
+                                .addMessage(
+                              context: context,
+                              productModel: widget.productModel,
+                            );
+                            if (widget.productModel != null) {
+                              setState(() {
+                                widget.productModel = null;
+                              });
+                            }
+                          },
+                    child: Container(
+                      padding: const EdgeInsets.all(12.5),
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.send_sharp,
+                        color: primaryTextColor,
+                        size: 18,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -190,50 +213,55 @@ class _DetailChatPageState extends State<DetailChatPage> {
     }
 
     Widget content() {
-      return ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: defaultMargin,
-        ),
-        children: const [
-          ChatBubble(
-              hasProduct: true,
-              isSender: true,
-              text: 'Hello Ganhsajhsjahjshjahsjasasasjahgsjahg'),
-          ChatBubble(
-              isSender: false,
-              text:
-                  'Good night, This item is only available in size 42 and 43'),
-          ChatBubble(
-              isSender: true,
-              text: 'Hello Ganhsajhsjahjshjahsjasasasjahgsjahg'),
-          ChatBubble(
-              isSender: false,
-              text:
-                  'Good night, This item is only available in size 42 and 43'),
-          ChatBubble(
-              isSender: true,
-              text: 'Hello Ganhsajhsjahjshjahsjasasasjahgsjahg'),
-          ChatBubble(
-              isSender: false,
-              text:
-                  'Good night, This item is only available in size 42 and 43'),
-          ChatBubble(
-              isSender: true,
-              text: 'Hello Ganhsajhsjahjshjahsjasasasjahgsjahg'),
-          ChatBubble(
-              isSender: false,
-              text:
-                  'Good night, This item is only available in size 42 and 43'),
+      return Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: Provider.of<MessageProvider>(context, listen: false)
+                  .getMessage(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) =>
+                  snapshot.connectionState == ConnectionState.waiting
+                      ? Center(
+                          child: Text(
+                            'Memuat...',
+                            style: subtitleTextSytle,
+                          ),
+                        )
+                      : snapshot.data!.docs.isNotEmpty
+                          ? ListView.builder(
+                              reverse: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) => ChatBubble(
+                                hasProduct: snapshot.data!.docs[index]
+                                    ['product'],
+                                text: snapshot.data!.docs[index]['message'],
+                                isSender: snapshot.data!.docs[index]
+                                    ['isFromUser'],
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'Please start send message...',
+                                style: subtitleTextSytle,
+                              ),
+                            ),
+            ),
+          ),
+          chatInput(),
         ],
       );
     }
 
-    return Scaffold(
-      backgroundColor: bgColor3,
-      appBar: detailChatAppBar(),
-      body: content(),
-      bottomNavigationBar: chatInput(),
+    return WillPopScope(
+      onWillPop: () async {
+        Provider.of<MessageProvider>(context, listen: false).controller.clear();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: bgColor3,
+        appBar: detailChatAppBar(),
+        body: content(),
+      ),
     );
   }
 }

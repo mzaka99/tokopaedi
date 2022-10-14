@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tokopaedi/pages/detail_chat_page.dart';
 import 'package:tokopaedi/theme.dart';
+import 'package:intl/intl.dart';
 
 class ChatTile extends StatelessWidget {
-  const ChatTile({Key? key}) : super(key: key);
+  const ChatTile({Key? key, required this.message, required this.dateTime})
+      : super(key: key);
+  final String message;
+  final DateTime dateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,7 @@ class ChatTile extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) =>  DetailChatPage(productModel: null),
+            builder: (context) => DetailChatPage(productModel: null),
           ),
         );
       },
@@ -33,13 +37,13 @@ class ChatTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Shoe Store',
+                        'Tokopaedi',
                         style: primaryTextStyle.copyWith(
                           fontSize: 15,
                         ),
                       ),
                       Text(
-                        'Good night, This item is on Going',
+                        message,
                         maxLines: 1,
                         style: secondaryTextStyle.copyWith(
                           fontWeight: light,
@@ -50,7 +54,13 @@ class ChatTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Now',
+                  DateFormat('hh:mm').format(dateTime) ==
+                          DateFormat('hh:mm').format(DateTime.now())
+                      ? 'Now'
+                      : DateFormat('dd/MM/yyyy').format(dateTime) ==
+                              DateFormat('dd/MM/yyyy').format(DateTime.now())
+                          ? DateFormat('hh:mm').format(dateTime)
+                          : DateFormat('dd/MM/yyyy').format(dateTime),
                   style: secondaryTextStyle.copyWith(
                     fontSize: 10,
                   ),

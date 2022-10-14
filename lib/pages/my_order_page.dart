@@ -7,7 +7,6 @@ import 'package:tokopaedi/providers/my_order_provider.dart';
 import 'package:tokopaedi/widgets/my_order_card.dart';
 import 'package:tokopaedi/widgets/widget_custom.dart';
 
-import '../providers/cart_provider.dart';
 import '../theme.dart';
 
 class MyOrderPage extends StatelessWidget {

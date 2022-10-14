@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:tokopaedi/providers/user_provider.dart';
 
 import '../theme.dart';
 

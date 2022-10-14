@@ -4,16 +4,12 @@ import 'package:tokopaedi/theme.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble(
-      {Key? key,
-      required this.text,
-      required this.isSender,
-      this.hasProduct = false})
+      {Key? key, required this.text, required this.isSender, this.hasProduct})
       : super(key: key);
 
   final String text;
   final bool isSender;
-  final bool hasProduct;
-
+  final Map<String, dynamic>? hasProduct;
   @override
   Widget build(BuildContext context) {
     Widget productPreview() {
@@ -38,8 +34,8 @@ class ChatBubble extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    'assets/shoes/preview_shoes.png',
+                  child: Image.network(
+                    hasProduct!['imageUrl'],
                     width: 70,
                   ),
                 ),
@@ -52,7 +48,7 @@ class ChatBubble extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'COURT VISIO 2.0 2022',
+                        hasProduct!['name'],
                         style: primaryTextStyle.copyWith(
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -62,7 +58,7 @@ class ChatBubble extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        '\$57,15',
+                        '\$${hasProduct!['price']}',
                         style: priceTextStyle.copyWith(
                           fontWeight: medium,
                         ),
@@ -125,7 +121,7 @@ class ChatBubble extends StatelessWidget {
         crossAxisAlignment:
             isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          hasProduct ? productPreview() : const SizedBox(),
+          hasProduct != null ? productPreview() : const SizedBox(),
           Row(
             mainAxisAlignment:
                 isSender ? MainAxisAlignment.end : MainAxisAlignment.start,

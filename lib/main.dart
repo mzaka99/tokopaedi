@@ -14,7 +14,7 @@ import 'package:tokopaedi/pages/splash_page.dart';
 import 'package:tokopaedi/providers/authenticate_provider.dart';
 import 'package:tokopaedi/providers/cart_provider.dart';
 import 'package:tokopaedi/providers/category_product_provider.dart';
-import 'package:tokopaedi/providers/chat_provider.dart';
+import 'package:tokopaedi/providers/message.provider.dart';
 import 'package:tokopaedi/providers/favorite_provider.dart';
 import 'package:tokopaedi/providers/fcm_provider.dart';
 import 'package:tokopaedi/providers/my_order_provider.dart';
@@ -24,7 +24,6 @@ import 'package:timezone/data/latest_10y.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
 }
 
 void main() async {
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => CategoryProductProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
-        ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => MessageProvider()),
         ChangeNotifierProvider(create: (context) => MyOrderProvider()),
         ChangeNotifierProvider(create: (context) => FCMProvider()),
       ],
