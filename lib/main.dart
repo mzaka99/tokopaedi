@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: MaterialApp(
-          title: 'Tokopaedi',
+          title: 'TOKOPAEDI',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
