@@ -30,7 +30,7 @@ class CategoryProductProvider with ChangeNotifier {
         loadedData.add(
           CategoryProductModel(
             id: prodId,
-            name: prodData['name'],
+            name: prodData,
           ),
         );
       });
